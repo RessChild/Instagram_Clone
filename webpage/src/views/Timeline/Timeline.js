@@ -1,14 +1,36 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Box } from "@material-ui/core";
 import Logo from "../../sources/instagram_logo.png";
 
-const maxWidth = "65rem";
-const borderColor="#000000"
+import { IoPersonSharp, IoLogoInstagram } from "react-icons/io5";
+import { CgPen, CgTag } from "react-icons/cg";
 
-const Timeline = () => {
+import GridContainer from "../../components/GridContainer/GridContainer";
+import GridItem from "../../components/GridItem/GridItem";
+
+const maxWidth = "50rem";
+const borderColor = "grey.500"
+
+const Timeline = ({ history }) => {
+    const source = axios.CancelToken.source();
+
+    const [ posts, setPosts ] = useState([{}, {}, {}, {}]);
+
+    // useEffect(() => {
+    //     axios.get(`/api/`, { cancelToken: source.token })
+    //         .then( ({ data }) => { 
+    //             console.log(data);
+    //         })
+    //         .catch( e => { if( !axios.isCancel(e) ) console.log(e); });
+
+    //     return () => {
+    //         source.cancel();
+    //     }
+    // }, [])
+
     return (
-        <Box bgcolor="#f7f7f7">
+        <Box bgcolor="#f7f7f7" height="100vh" overflow="auto">
         <Box id="timeline-header" bgcolor="#ffffff"
             position="fixed" top="0" height="4rem" width="100vw" 
             borderBottom={1} borderColor={borderColor}>
@@ -25,17 +47,62 @@ const Timeline = () => {
         <Box id="timeline-profile" marginTop="4rem">
             <Box width="100vw" maxWidth={maxWidth} margin="auto" borderBottom={1} borderColor={borderColor} 
                 display="flex" padding="2rem">
-                <Box id="timeline-profile-img" flex={1}>
-                    프로필 이미지
+                <Box id="timeline-profile-img" flex={1} display="flex" justifyContent="center">
+                    <Box border={3} borderColor="#ffa4a4" bgcolor="white"
+                        width="10rem" height="10rem" borderRadius="5rem" overflow="hidden" 
+                        display="flex" justifyContent="center" alignItems="center">
+                        <IoPersonSharp size="6rem" color="black"/>
+                    </Box>
                 </Box>
-                <Box id="timeline-profile-info" flex={2}>
-                    프로필 정보 ( 닉네임, 게시글, 팔로워 ,팔로우 , 한줄소개)
+                <Box id="timeline-profile-info" flex={2} >
+                    <Box id="timeline-profile-email" marginBottom="1rem"
+                        fontSize="1.7rem" fontWeight="fontWeightLight">
+                        user_email
+                    </Box>
+                    <Box id="timeline-profile-count" marginBottom="1rem"
+                        display="flex" alignItems="space-between">
+                        <Box flex={1}>게시글 <Box display="inline" fontWeight="fontWeightBold">3300</Box></Box>
+                        <Box flex={1}>팔로워 <Box display="inline" fontWeight="fontWeightBold">3300</Box></Box>
+                        <Box flex={1}>팔로우 <Box display="inline" fontWeight="fontWeightBold">3300</Box></Box>
+                    </Box>
+                    <Box id="timeline-profile-introduce" fontSize="1rem">
+                        <Box fontWeight="fontWeightBold">
+                            nickname
+                        </Box>
+                        <Box>
+                            자기소개
+                        </Box>
+                    </Box>
                 </Box>
             </Box>
         </Box>
         <Box id="timeline-content">
             <Box width="100vw" maxWidth={maxWidth} margin="auto">
-                게시글 리스트
+                <Box id="timeline-content-tab" marginBottom="10px"
+                    display="flex" justifyContent="center" alignItems="center"
+                    fontSize="0.9rem" fontWeight="700">
+                    <Box width="100px" height="3rem" textAlign="center" lineHeight="3rem">
+                        <CgPen size="0.9rem"/>&nbsp;&nbsp;게시물
+                    </Box>
+                    <Box width="100px" height="3rem" textAlign="center" lineHeight="3rem">
+                        <CgTag size="0.9rem"/>&nbsp;&nbsp;태그됨
+                    </Box>
+                </Box>
+                <GridContainer spacing={4} justify="flex-start">
+                    {
+                        posts.map((post) => {
+                            return (
+                                <GridItem xs={4}>
+                                    <Box overflow="hidden" border={1} borderColor="#565656"
+                                        width="30vw" maxWidth="15rem" height="30vw" maxHeight="15rem" margin="auto"
+                                        display="flex" alignItems="center" justifyContent="center">
+                                        <IoLogoInstagram size="5rem" />
+                                    </Box>
+                                </GridItem>
+                            )
+                        })
+                    }
+                </GridContainer>
             </Box>
         </Box>
         </Box>
