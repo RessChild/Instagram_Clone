@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useReducer, useState } from "react";
 import axios from "axios";
 import { Box } from "@material-ui/core";
 import Logo from "../../sources/instagram_logo.png";
@@ -8,28 +8,35 @@ import { CgPen, CgTag } from "react-icons/cg";
 
 import GridContainer from "../../components/GridContainer/GridContainer";
 import GridItem from "../../components/GridItem/GridItem";
+import { TimelineInit, TimelineReduce } from "./reducer/TimelineReducer";
 
 const maxWidth = "50rem";
 const borderColor = "grey.500"
 
-const Timeline = ({ history }) => {
+const Timeline = ({ history, location, match }) => {
     const source = axios.CancelToken.source();
 
-    const [ posts, setPosts ] = useState([{}, {}, {}, {}]);
+    const { email } = match.params; // 주소로 넘어오는 정보 ( /:email )
 
-    // useEffect(() => {
-    //     axios.get(`/api/`, { cancelToken: source.token })
-    //         .then( ({ data }) => { 
-    //             console.log(data);
-    //         })
-    //         .catch( e => { if( !axios.isCancel(e) ) console.log(e); });
+    const [ state, dispatch ] = useReducer(TimelineReduce, TimelineInit);
+    const { posts, isLoading } = state;
 
-    //     return () => {
-    //         source.cancel();
-    //     }
-    // }, [])
+    useEffect(() => {
+        axios.get(`/api/timeline/profile/${email}`, { cancelToken: source.token })
+            .then( ({ data }) => { 
+                console.log(data);
+            })
+            .catch( e => { if( !axios.isCancel(e) ) console.log(e); });
+
+        return () => {
+            source.cancel();
+        }
+    }, [])
 
     return (
+        isLoading
+        ? <div>로딩중...</div> 
+        :
         <Box bgcolor="#f7f7f7" height="100vh" overflow="auto">
         <Box id="timeline-header" bgcolor="#ffffff"
             position="fixed" top="0" height="4rem" width="100vw" 

@@ -1,8 +1,7 @@
-import logo from './logo.svg';
 import './App.css';
-import { useEffect } from 'react';
-import axios from "axios";
 import Timeline from './views/Timeline/Timeline';
+
+import { BrowserRouter, Route } from "react-router-dom"
 
 function App() {
 
@@ -18,8 +17,11 @@ function App() {
   //     .catch( e => console.log(e) );
   // }, [])
 
+  // react-router
   return (
-    <Timeline />
+    <BrowserRouter>
+      <Route exact path="/:email" component={Timeline} />
+    </BrowserRouter>
   );
 }
 

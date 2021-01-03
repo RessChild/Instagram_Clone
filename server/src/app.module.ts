@@ -1,9 +1,11 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import "dotenv/config";
-import { Example } from './entities/example.entity';
 
-import { ExampleModule } from './example/example.module';
+import { TimelineModule } from './timeline/timeline.module';
+
+import { Post } from './entities/post.entity';
+import { User } from './entities/user.entity';
 
 @Module({
   imports: [
@@ -21,10 +23,10 @@ import { ExampleModule } from './example/example.module';
           }
         },
         // 사용할 TABLE 객체 정보
-        "entities": [Example],
+        "entities": [User, Post],
         "synchronize": true, // TABLE 자동 생성
       }),
-    ExampleModule,
+    TimelineModule,
   ],
   controllers: [],
   providers: [],

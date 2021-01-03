@@ -41,3 +41,8 @@
 # branch 생성
 - git branch snsClone
 - git checkcout snsClone
+
+# 진행 상황
+1. 2021/01/03
+    - 화면 구성 기본 폼까진 구축
+    - DB 연동 진행 중 ( user, post )
