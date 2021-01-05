@@ -1,7 +1,9 @@
 import './App.css';
 import Timeline from './views/Timeline/Timeline';
 
-import { BrowserRouter, Route } from "react-router-dom"
+import { BrowserRouter, Redirect, Route } from "react-router-dom"
+import Login from './views/Login/Login';
+import Register from './views/Register/Register';
 
 function App() {
 
@@ -20,7 +22,10 @@ function App() {
   // react-router
   return (
     <BrowserRouter>
-      <Route exact path="/:email" component={Timeline} />
+      <Route exact path="/login" component={Login} />
+      <Route exact path="/register" component={Register} />
+      <Route exact path="/timeline/:email" component={Timeline} />
+      <Redirect to='/login'/>
     </BrowserRouter>
   );
 }

@@ -1,5 +1,5 @@
 export const TimelineInit = {
-    isLoading: false,
+    isLoading: true,
     user: {
         email: '',
         username: '',

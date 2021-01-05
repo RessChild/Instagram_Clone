@@ -17,15 +17,36 @@ export class TimelineService {
     ) {}
 
     userTimeline (email: string) {
-        return User.find({ email: email });
+        // return User.findOne({ where: [{ email: email }], 
+        //         select: ["email", "registeredAt"],
+        //         relations: ["posts"],
+        //         // join: {
+        //         //     alias: "posts",
+        //         // }
+        //     });
+        // return User.findOne({
+
+        //[ExceptionsHandler] ER_BAD_FIELD_ERROR: Unknown column 'distinctAlias.User_id' in 'field list'
+
+        return User.find({ 
+                where: [{ email: email }],
+                select: ["email", "username", "registeredAt"],
+                relations: ["posts"],
+            });
     }
 
-    generateDefault ()
+    async generateDefault (email: string)
     {
-        return User.create({
-            email: '1111',
-            password: '1111',
-            salt: '1234',
-        }).save();
+        const user = await User.create({
+                email: email,
+                username: email,
+                password: email,
+                salt: '1234',
+            }).save();
+        return Post.create({
+                writer: user,
+                picture: ['a', 'b', 'c'],
+            }).save();
     }
+
 }

@@ -1,14 +1,16 @@
 import React, { useEffect, useReducer, useState } from "react";
 import axios from "axios";
 import { Box } from "@material-ui/core";
-import Logo from "../../sources/instagram_logo.png";
+import Logo from "../../sources/instagram_title.png";
 
 import { IoPersonSharp, IoLogoInstagram } from "react-icons/io5";
 import { CgPen, CgTag } from "react-icons/cg";
 
 import GridContainer from "../../components/GridContainer/GridContainer";
 import GridItem from "../../components/GridItem/GridItem";
-import { TimelineInit, TimelineReduce } from "./reducer/TimelineReducer";
+import { CHANGE_DATA, TimelineInit, TimelineReduce } from "./reducer/TimelineReducer";
+
+import Loading from "../Loading/Loading";
 
 const maxWidth = "50rem";
 const borderColor = "grey.500"
@@ -19,15 +21,27 @@ const Timeline = ({ history, location, match }) => {
     const { email } = match.params; // 주소로 넘어오는 정보 ( /:email )
 
     const [ state, dispatch ] = useReducer(TimelineReduce, TimelineInit);
-    const { posts, isLoading } = state;
+    const { username, posts, isLoading } = state;
 
-    useEffect(() => {
+    const axiosTimeline = () => {
+        dispatch({ type: CHANGE_DATA, data: { isLoading: true }});
         axios.get(`/api/timeline/profile/${email}`, { cancelToken: source.token })
-            .then( ({ data }) => { 
-                console.log(data);
+            .then( ({ data }) => {
+                if( !data ) return console.log(`can't find user`);
+
+                // 데이터 세팅
+                dispatch({ type: CHANGE_DATA,
+                    data: {
+                        isLoading: false,
+                        ...data,
+                    }
+                })
             })
             .catch( e => { if( !axios.isCancel(e) ) console.log(e); });
+    }
 
+    useEffect(() => {
+        axiosTimeline();
         return () => {
             source.cancel();
         }
@@ -35,7 +49,7 @@ const Timeline = ({ history, location, match }) => {
 
     return (
         isLoading
-        ? <div>로딩중...</div> 
+        ? <Loading /> 
         :
         <Box bgcolor="#f7f7f7" height="100vh" overflow="auto">
         <Box id="timeline-header" bgcolor="#ffffff"
@@ -64,7 +78,7 @@ const Timeline = ({ history, location, match }) => {
                 <Box id="timeline-profile-info" flex={2} >
                     <Box id="timeline-profile-email" marginBottom="1rem"
                         fontSize="1.7rem" fontWeight="fontWeightLight">
-                        user_email
+                        { email }
                     </Box>
                     <Box id="timeline-profile-count" marginBottom="1rem"
                         display="flex" alignItems="space-between">
@@ -74,7 +88,7 @@ const Timeline = ({ history, location, match }) => {
                     </Box>
                     <Box id="timeline-profile-introduce" fontSize="1rem">
                         <Box fontWeight="fontWeightBold">
-                            nickname
+                            { username }
                         </Box>
                         <Box>
                             자기소개
