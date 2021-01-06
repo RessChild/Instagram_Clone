@@ -1,5 +1,5 @@
 # 기본 세팅
-    - front: REACT / AXIOS
+    - front: REACT / AXIOS / REACT-ICONS / REACT-SPRING
         1. npx create-react-app webpage
         2. npm i http-proxy-middleware --save
         3. npm i axios --save

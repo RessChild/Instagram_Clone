@@ -12,10 +12,10 @@ import IMG from "../../sources/instagram_logo.png";
 // https://www.react-spring.io/docs/hooks/examples
 
 // 신규 포스트 등록 화면
-const NewPost = () => {
+const Post = () => {
 
     const [ page, setPage ] = useState(0); // 현재 페이지 번호
-    const [ images, setImages ] = useState(['a','abab','stea','ebdf','2532gfsar']); // 이미지 리스트
+    const [ images, setImages ] = useState([]); // 이미지 리스트
 
     // 좌,우 버튼 클릭 함수
     const onClickLeft = () => setPage(state => state - 1, []);
@@ -27,11 +27,7 @@ const NewPost = () => {
         from: { opacity: 0, transform: 'translate3d(100%,0,0)' }, // 좌측
         enter: { opacity: 1, transform: 'translate3d(0%,0,0)' }, // 중앙
         leave: { opacity: 0, transform: 'translate3d(-50%,0,0)' }, // 우측
-    });
-
-    const onChangeAddImg = ({ currentTarget: { files }}) => {
-        console.log(files);
-    }
+      })
 
     return (
         <Box width="100vw" maxWidth="50rem" display="flex">
@@ -41,13 +37,7 @@ const NewPost = () => {
                         return <animated.div key={key} props={props} /* style={{ position: "absolute", width: "100%", height: "100%" }}*/>
                             <Box position="absolute" width="100%" height="100%" bgcolor="white"
                                 display="flex" alignItems="center" justifyContent="center">
-                                { images[item] 
-                                    ? <img alt={`등록 이미지 - ${item}`} /> 
-                                    : <>
-                                        <label htmlFor="img-space-add" style={{ cursor: "pointer" }}><BsPlusSquareFill size="5rem" /></label>
-                                        <input onChange={onChangeAddImg} type="file" id="img-space-add" style={{ display: "none" }} />
-                                    </>
-                                }
+                                { images[item] ? <img alt={`등록 이미지 - ${item}`} /> : <BsPlusSquareFill size="5rem" /> }
                             </Box>
                         </animated.div>;
                     })
@@ -76,4 +66,4 @@ const NewPost = () => {
     )
 }
 
-export default NewPost;
+export default Post;
