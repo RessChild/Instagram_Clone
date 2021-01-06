@@ -6,6 +6,9 @@ import { TimelineModule } from './timeline/timeline.module';
 
 import { Post } from './entities/post.entity';
 import { User } from './entities/user.entity';
+import { IdentifyService } from './identify/identify.service';
+import { IdentifyController } from './identify/identify.controller';
+import { IdentifyModule } from './identify/identify.module';
 
 @Module({
   imports: [
@@ -27,6 +30,7 @@ import { User } from './entities/user.entity';
         "synchronize": true, // TABLE 자동 생성
       }),
     TimelineModule,
+    IdentifyModule,
   ],
   controllers: [],
   providers: [],

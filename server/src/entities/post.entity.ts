@@ -14,6 +14,6 @@ export class Post extends BaseEntity {
     writedAt: Date;
 
     // 관계 맺기
-    @ManyToOne(type => User, user => user.posts)
+    @ManyToOne(type => User, user => user.posts, { nullable: false, onDelete: 'CASCADE' })
     writer: User; // 각 게시글의 작성자는 유일
 }

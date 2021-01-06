@@ -1,16 +1,18 @@
 import React, { useEffect, useReducer, useState } from "react";
 import axios from "axios";
-import { Box } from "@material-ui/core";
+import { Box, Dialog } from "@material-ui/core";
 import Logo from "../../sources/instagram_title.png";
 
 import { IoPersonSharp, IoLogoInstagram } from "react-icons/io5";
 import { CgPen, CgTag } from "react-icons/cg";
+import { MdAddAPhoto } from "react-icons/md";
 
 import GridContainer from "../../components/GridContainer/GridContainer";
 import GridItem from "../../components/GridItem/GridItem";
 import { CHANGE_DATA, TimelineInit, TimelineReduce } from "./reducer/TimelineReducer";
 
 import Loading from "../Loading/Loading";
+import NewPost from "../NewPost/NewPost";
 
 const maxWidth = "50rem";
 const borderColor = "grey.500"
@@ -21,19 +23,21 @@ const Timeline = ({ history, location, match }) => {
     const { email } = match.params; // 주소로 넘어오는 정보 ( /:email )
 
     const [ state, dispatch ] = useReducer(TimelineReduce, TimelineInit);
-    const { username, posts, isLoading } = state;
+    const { login, username, posts, isLoading } = state;
 
     const axiosTimeline = () => {
         dispatch({ type: CHANGE_DATA, data: { isLoading: true }});
-        axios.get(`/api/timeline/profile/${email}`, { cancelToken: source.token })
-            .then( ({ data }) => {
-                if( !data ) return console.log(`can't find user`);
+        axios.post(`/api/timeline/profile/${email}`, { jwt: localStorage.getItem('access_token') }, { cancelToken: source.token })
+            .then( ({ data: { login, timeline } }) => {
+                if( !timeline ) return console.log(`can't find user`);
 
+                console.log(login, timeline);
                 // 데이터 세팅
                 dispatch({ type: CHANGE_DATA,
                     data: {
                         isLoading: false,
-                        ...data,
+                        login: login || '',
+                        ...timeline,
                     }
                 })
             })
@@ -46,6 +50,16 @@ const Timeline = ({ history, location, match }) => {
             source.cancel();
         }
     }, [])
+
+
+    // 다이얼로그 창
+    const [ dialog, setDialog ] = useState('');
+    const onCloseDialog = () => setDialog(''); // 지우기
+
+    // 새 포스트 등록 기능
+    const onClickWritePost = ({ currentTarget: { id }}) => {
+        setDialog(id);
+    };
 
     return (
         isLoading
@@ -60,9 +74,7 @@ const Timeline = ({ history, location, match }) => {
                 <Box id="timeline-header-logo">
                     <img title="instagram-logo" src={Logo} style={{ height: "8rem", width: "auto" }} />
                 </Box>
-                <Box id="timeline-header-user">
-                    사용자이름
-                </Box>
+                <Box id="timeline-header-user">{ login }</Box>
             </Box>
         </Box>
         <Box id="timeline-profile" marginTop="4rem">
@@ -110,10 +122,20 @@ const Timeline = ({ history, location, match }) => {
                     </Box>
                 </Box>
                 <GridContainer spacing={4} justify="flex-start">
+                    { login === email &&
+                        <GridItem xs={4} key={'post-create'}>
+                            <Box overflow="hidden" border={1} borderColor="#565656" 
+                                id="post-create" style={{ cursor: "pointer" }} onClick={onClickWritePost}
+                                width="30vw" maxWidth="15rem" height="30vw" maxHeight="15rem" margin="auto"
+                                display="flex" alignItems="center" justifyContent="center">
+                                <MdAddAPhoto size="5rem" />
+                            </Box>
+                        </GridItem>
+                    }
                     {
-                        posts.map((post) => {
+                        posts.map((post, idx) => {
                             return (
-                                <GridItem xs={4}>
+                                <GridItem xs={4} key={`post-${idx}`}>
                                     <Box overflow="hidden" border={1} borderColor="#565656"
                                         width="30vw" maxWidth="15rem" height="30vw" maxHeight="15rem" margin="auto"
                                         display="flex" alignItems="center" justifyContent="center">
@@ -126,6 +148,9 @@ const Timeline = ({ history, location, match }) => {
                 </GridContainer>
             </Box>
         </Box>
+        <Dialog maxWidth="md" open={dialog === "post-create"} onClose={onCloseDialog}>
+            <NewPost />
+        </Dialog>
         </Box>
     );
 }

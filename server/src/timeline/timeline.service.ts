@@ -35,18 +35,16 @@ export class TimelineService {
             });
     }
 
-    async generateDefault (email: string)
-    {
-        const user = await User.create({
-                email: email,
-                username: email,
-                password: email,
-                salt: '1234',
-            }).save();
-        return Post.create({
+    async createPost (email: string) {
+        const user = await User.findOne(null, {
+            where: [{ email: email }]
+        })
+        // console.log(user);
+        const result = await Post.create({
                 writer: user,
-                picture: ['a', 'b', 'c'],
+                picture: ['test', 'pictures'],
             }).save();
+        // console.log("post result:", result);
+        return result;
     }
-
 }

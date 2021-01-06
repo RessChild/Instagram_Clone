@@ -22,6 +22,6 @@ export class User extends BaseEntity {
 
     // 관계 생성 ( 1:M )
     // 참조할 DB 객체정보, 내 정보를 저장할 상대편 변수명
-    @OneToMany(type => Post, post => post.writer )
+    @OneToMany(type => Post, post => post.writer)
     posts: Post[]; // 사용자는 다수의 게시글 작성
 }

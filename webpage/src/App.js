@@ -1,9 +1,12 @@
 import './App.css';
 import Timeline from './views/Timeline/Timeline';
 
-import { BrowserRouter, Redirect, Route } from "react-router-dom"
+import { BrowserRouter, Redirect, Route, Switch } from "react-router-dom"
 import Login from './views/Login/Login';
 import Register from './views/Register/Register';
+
+
+import NewPost from './views/NewPost/NewPost';
 
 function App() {
 
@@ -22,10 +25,13 @@ function App() {
   // react-router
   return (
     <BrowserRouter>
-      <Route exact path="/login" component={Login} />
-      <Route exact path="/register" component={Register} />
-      <Route exact path="/timeline/:email" component={Timeline} />
-      <Redirect to='/login'/>
+      <Switch>
+        <Route path="/test" component={NewPost} />
+        <Route path="/login" component={Login} />
+        <Route path="/register" component={Register} />
+        <Route path="/timeline/:email" component={Timeline} />
+        <Redirect to='/login'/>
+      </Switch>
     </BrowserRouter>
   );
 }
