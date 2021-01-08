@@ -15,3 +15,4 @@
 - css 의 fixed 와 absolute 차이는, 화면 전체 기준이냐 부모 기준이냐
   ( 다만, 자신의 부모 기준으로 절대위치를 잡을 경우, 부모의 position 은 relative 가 될 것 )
 - animated 에서 box 가 층층이 생기는것을 막기위해선 position="absolute" 설정할 것
+- img 의 objectFit 속성은 사진 비율을 유지하도록 하는 옵션
