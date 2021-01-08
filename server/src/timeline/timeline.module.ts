@@ -9,9 +9,10 @@ import { TimelineService } from './timeline.service';
 @Module({
     imports: [ // 사용 DB 선언
         TypeOrmModule.forFeature([ User, Post ]),
-        MulterModule.register({ // 파일 업로드 모듈
-            dest: './uploads', // 위치 ( 실행 위치와의 상대경로 )
-        })
+        // 이건 안먹는듯..?
+        // MulterModule.register({ // 파일 업로드 모듈
+        //     dest: './uploads', // 위치 ( 실행 위치와의 상대경로 )
+        // })
     ],
     controllers: [TimelineController],
     providers: [TimelineService]

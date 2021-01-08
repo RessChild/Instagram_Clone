@@ -9,6 +9,8 @@ export class Post extends BaseEntity {
     // 각 게시글이 갖는 이미지 모음 ( 1번 이미지가 대표 ) 
     @Column({ type: "simple-array" })
     picture: string[];
+    @Column({ length: 200, default: '' })
+    content: string;
 
     @Column({ type: "timestamp", nullable: false, default: () => "CURRENT_TIMESTAMP" })
     writedAt: Date;

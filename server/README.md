@@ -1,5 +1,6 @@
 # 구성요소
 - NESTJS / TYPEORM / MYSQL
+- npm i multer --save
 
 # identify
 - 로그인 / 회원가입

@@ -1,6 +1,7 @@
-import { Body, Controller, Get, Param, Post, Put, UploadedFiles, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Get, Header, Param, Post, Put, UploadedFiles, UseInterceptors } from '@nestjs/common';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { TimelineService } from './timeline.service';
+import { diskStorage } from "multer";
 
 @Controller('/api/timeline')
 export class TimelineController {
@@ -14,26 +15,38 @@ export class TimelineController {
     async userTimeline (@Param('email') email: string, @Body('jwt') jwt: string) {
         // console.log("timeline api", email);
         const user = await this.timelineService.userTimeline(email);
-        console.log(user[0]);
         return {
             login: jwt,
             timeline: user[0] || null,
         };
-        // return {
-        //     ...user,
-        //     registeredAt: user.registeredAt.toDateString().slice(0,11),
-        // }
     }
 
     // 게시글 등록
     // https://docs.nestjs.com/techniques/file-upload
     @Put('/write-post')
-    @UseInterceptors(FilesInterceptor('localImgs', 7,  // 필드명, 최대한도
-    )) // 파일 업로드 옵션
-    // 일종의 미들웨어이므로, 업로드 역할을 수행하는 multer 선언이 따로 필요
-    async writePost (@UploadedFiles() files, @Body('text') text: string) {
-        console.log("포스트 작성", files, text);
-        return 'write-post';
+    @UseInterceptors(FilesInterceptor('localImgs', 7, { // 필드명, 최대한도
+        storage: diskStorage({ // 저장소 옵션
+            destination: (req, file, cb) => { // 저장 위치
+                cb(null, "./uploads")
+            },
+            filename: ( req, file, cb ) => { // 파일명 규칙
+                cb( null, `${Date.now()}-${file.originalname}` );
+            }
+        })
+    })) // 파일 업로드 옵션
+    async writePost (@UploadedFiles() files, @Body() body) {
+        // console.log("포스트 작성", files, body);
+
+        const { email, jwt, text } = body;
+        if( email !== jwt ) return null; // 작성자 정보가 다르면 실패
+        return await this.timelineService.writePost(email, files.map(file => file.filename), text);
+    }
+
+    @Get('/html-img/:file_name')
+    @Header('type','image/*') // 이미지 형태를 전송하기 위해선 response 의 헤더를 수정해야 함
+    async htmlImg (@Param('file_name') filename) {
+        const image = await this.timelineService.htmlImg( filename );
+        return image;
     }
 
     @Get('/create-post/:email')
