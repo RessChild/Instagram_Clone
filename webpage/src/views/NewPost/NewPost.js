@@ -12,7 +12,7 @@ import IMG from "../../sources/instagram_logo.png";
 // https://www.react-spring.io/docs/hooks/examples
 
 // 신규 포스트 등록 화면
-const NewPost = () => {
+const NewPost = ({ email, onClose }) => {
 
     const source = axios.CancelToken.source();
 
@@ -21,8 +21,8 @@ const NewPost = () => {
     const [ images, setImages ] = useState([]); // 이미지 리스트
 
     // 좌,우 버튼 클릭 함수
-    const onClickLeft = () => setPage(state => state - 1, []);
-    const onClickRight = () => setPage(state => state + 1, []);
+    const onClickLeft = () => setPage(page-1);
+    const onClickRight = () => setPage(page+1);
 
     // 애니메이션 옵션
     // 사용할 인덱스, ??, 애니메이션 스타일
@@ -45,16 +45,19 @@ const NewPost = () => {
             // console.log(fileList[idx]);
             arr.push( fileList[idx] );
         }
-        setLocalImgs(state => state.concat(arr), []);
-        setImages(state => state.concat(arr.map( file => URL.createObjectURL(file)) ), []);
+        setLocalImgs([...localImgs, ...arr]);
+        setImages([ ...images, ...arr.map( file => URL.createObjectURL(file)) ]);
     }
 
     // 게시글 등록 버튼
     const onClickSubmit = () => {
         if(!images.length) return alert("최소 1개 이상의 사진 등록이 필요합니다.");
 
+        console.log(localStorage);
         // console.log(localImgs);
-        const formData = new FormData();        
+        const formData = new FormData();
+        formData.append('jwt', localStorage.getItem('access_token'));
+        formData.append('email', email)
         for(const img of localImgs) {
             // console.log(idx);
             formData.append("localImgs", img);
@@ -63,7 +66,8 @@ const NewPost = () => {
 
         axios.put("/api/timeline/write-post", formData, { cancelToken: source.token })
             .then(({ data }) => {
-                console.log(data);
+                // 등록에 완료하면, 창 닫기
+                onClose();
             })
             .catch( e => {
                 if(!axios.isCancel(e)) return alert(e);

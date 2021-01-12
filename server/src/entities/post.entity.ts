@@ -1,9 +1,10 @@
-import { BaseEntity, Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { BaseEntity, Column, Entity, ManyToOne, PrimaryColumn, PrimaryGeneratedColumn } from "typeorm";
 import { User } from "./user.entity";
 
-@Entity()
+@Entity("post", { orderBy: { writedAt: "DESC" }}) // 생성할 이름, 추가 옵션 (정렬)
 export class Post extends BaseEntity {
-    @PrimaryGeneratedColumn("uuid")
+    // @PrimaryColumn('varchar', { length: <max shortId length>, default: () => `'${shortid.generate()}'` })
+    @PrimaryGeneratedColumn()
     pid: string;
 
     // 각 게시글이 갖는 이미지 모음 ( 1번 이미지가 대표 ) 

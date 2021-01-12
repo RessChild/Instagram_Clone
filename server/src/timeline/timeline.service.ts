@@ -6,7 +6,6 @@ import { Repository } from 'typeorm';
 
 import * as path from "path"; // 경로
 import * as fs from "fs"; // 파일 입출력
-import { kill } from 'process';
 
 @Injectable()
 export class TimelineService {
@@ -21,11 +20,15 @@ export class TimelineService {
 
     // 타임라인 출력
     userTimeline (email: string) {
-        return User.find({ 
+        return User.find({
                 where: [{ email: email }],
                 select: ["email", "username", "registeredAt"],
                 relations: ["posts"],
             });
+    }
+
+    getPost(pid: string) {
+        return Post.findOne(pid);
     }
 
     // 게시글 작성
@@ -43,9 +46,15 @@ export class TimelineService {
 
     // 이미지 미리보기
     async htmlImg (filename: string) {
-        const file = await fs.promises.readFile( path.join(__dirname, `../../uploads/${filename}` ), null);
-        // console.log(file);
+        const file = await fs.promises.readFile( path.join(__dirname, `/../../uploads/${filename}` ) );
+        const filename_split = filename.split('.');
+        const type = filename_split[filename_split.length - 1];
+
         return file;
+        // return `data:image/*;base64,${Buffer.from(file).toString('base64')}`;
+        // return file.toString('base64');
+        // return Buffer.from(file).toString('base64');
+        // return `data:image/${type};base64, ${file.toString('base64')}`;
     }
 
     async createPost (email: string) {

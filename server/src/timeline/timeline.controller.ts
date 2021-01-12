@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Header, Param, Post, Put, UploadedFiles, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Get, Header, Param, Post, Put, Res, UploadedFiles, UseInterceptors } from '@nestjs/common';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { TimelineService } from './timeline.service';
 import { diskStorage } from "multer";
@@ -19,6 +19,12 @@ export class TimelineController {
             login: jwt,
             timeline: user[0] || null,
         };
+    }
+
+    @Get('/post/:pid')
+    async getPost(@Param('pid') pid: string) {
+        // console.log("post detail");
+        return await this.timelineService.getPost(pid);
     }
 
     // 게시글 등록
@@ -43,10 +49,16 @@ export class TimelineController {
     }
 
     @Get('/html-img/:file_name')
-    @Header('type','image/*') // 이미지 형태를 전송하기 위해선 response 의 헤더를 수정해야 함
-    async htmlImg (@Param('file_name') filename) {
+    // @Header('Content-Type','application/octet-stream') // 이미지 형태를 전송하기 위해선 response 의 헤더를 수정해야 함
+    // @Header('Content-Type','image/*') // 이미지 형태를 전송하기 위해선 response 의 헤더를 수정해야 함
+    @Header('content-type', 'image/*; charset=base64')
+    // @Header('X-Content-Type-Options', 'nosniff')
+    async htmlImg (@Param('file_name') filename, @Res() res) {
+        console.log(filename);
+
         const image = await this.timelineService.htmlImg( filename );
-        return image;
+        // console.log('이미지 미리보기');
+        return res.status(200).end(image);
     }
 
     @Get('/create-post/:email')

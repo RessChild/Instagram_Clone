@@ -1,8 +1,9 @@
 # 기본 세팅
-    - front: REACT / AXIOS / REACT-ICONS / REACT-SPRING
+    - front: REACT / AXIOS / REACT-ICONS / REACT-SPRING / MULTER
         1. npx create-react-app webpage
         2. npm i http-proxy-middleware --save
         3. npm i axios --save
+        4. npm i multer --save
     - back: NESTJS / TYPESCRIPT / TYPEORM (mysql)
         1. npm i nestjs -g
         2. nest new project_name ( 내부에 생성되는 .git 폴더 제거 )
@@ -50,3 +51,13 @@
     - 기본 로그인 / 화면전환 구성
     - 인스타그램은 웹 내에서 게시글 등록이 없으므로 임의로 해당 기능 구현 진행
       ( 모바일에선, 사진을 다수 선택하면 좌측 스크롤로 좌르륵 등장 + 추가버튼 존재 )
+3. 2021/01/08
+    - 사진 업로드 및 게시글 생성까진 완료
+    - 다만, 대표이미지를 불러오는 과정에서 헤더설정이 진행 안되는 중
+4. 2021/01/11
+    - 이미지 미리보기 문제 해결
+      @res() '객체'를 설정하여 return 하는 방식을 써야함
+      ( 즉, return res 형태를 취하고 있음. )
+5. 2021/01/12
+    - typeorm 에서 relation 의 출력 순서를 바꾸려고 시도중 
+      ( 아마, id 순으로 정렬되는 것 같은데, 현 시점에선 랜덤값이라 순서가 지멋대로 )

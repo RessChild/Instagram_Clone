@@ -13,6 +13,7 @@ import { CHANGE_DATA, TimelineInit, TimelineReduce } from "./reducer/TimelineRed
 
 import Loading from "../Loading/Loading";
 import NewPost from "../NewPost/NewPost";
+import Post from "../Post/Post";
 
 const maxWidth = "50rem";
 const borderColor = "grey.500"
@@ -21,7 +22,6 @@ const Timeline = ({ history, location, match }) => {
     const source = axios.CancelToken.source();
 
     const { email } = match.params; // 주소로 넘어오는 정보 ( /:email )
-
     const [ state, dispatch ] = useReducer(TimelineReduce, TimelineInit);
     const { login, username, posts, isLoading } = state;
 
@@ -54,7 +54,16 @@ const Timeline = ({ history, location, match }) => {
 
     // 다이얼로그 창
     const [ dialog, setDialog ] = useState('');
-    const onCloseDialog = () => setDialog(''); // 지우기
+    const onCloseDialog = () => setDialog(''); // 창 닫기
+    const onCloseDialogWithReload = () => {
+        axiosTimeline(); // 리스트 갱신
+        setDialog(''); // 창 닫기
+    }
+
+    // 포스트 상세보기
+    const onClickPost = ({ currentTarget: { id }}) => {
+        setDialog(id);
+    }
 
     // 새 포스트 등록 기능
     const onClickWritePost = ({ currentTarget: { id }}) => {
@@ -133,13 +142,15 @@ const Timeline = ({ history, location, match }) => {
                         </GridItem>
                     }
                     {
-                        posts.map((post, idx) => {
+                        posts.map(({ pid, picture }, idx) => {
                             return (
                                 <GridItem xs={4} key={`post-${idx}`}>
                                     <Box overflow="hidden" border={1} borderColor="#565656"
                                         width="30vw" maxWidth="15rem" height="30vw" maxHeight="15rem" margin="auto"
-                                        display="flex" alignItems="center" justifyContent="center">
-                                        <IoLogoInstagram size="5rem" />
+                                        display="flex" alignItems="center" justifyContent="center" 
+                                        onClick={onClickPost} id={pid}>
+                                        {/* <IoLogoInstagram size="5rem" /> */}
+                                        <img src={`/api/timeline/html-img/${picture[0]}`} style={{ maxWidth: "100%", maxHeight: "100%"}} alt={`게시글 대표 이미지-${idx}`} />
                                     </Box>
                                 </GridItem>
                             )
@@ -148,8 +159,11 @@ const Timeline = ({ history, location, match }) => {
                 </GridContainer>
             </Box>
         </Box>
+        <Dialog maxWidth="md" open={!!dialog && dialog !== "post-create"} onClose={onCloseDialog}>
+            <Post pid={dialog} onClose={onCloseDialog} />
+        </Dialog>
         <Dialog maxWidth="md" open={dialog === "post-create"} onClose={onCloseDialog}>
-            <NewPost />
+            <NewPost email={email} onClose={onCloseDialogWithReload} />
         </Dialog>
         </Box>
     );
