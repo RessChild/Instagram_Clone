@@ -24,7 +24,9 @@ export class TimelineController {
     @Get('/post/:pid')
     async getPost(@Param('pid') pid: string) {
         // console.log("post detail");
-        return await this.timelineService.getPost(pid);
+        const result = await this.timelineService.getPost(pid);
+        console.log(result);
+        return result;
     }
 
     // 게시글 등록

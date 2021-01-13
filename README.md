@@ -61,3 +61,8 @@
 5. 2021/01/12
     - typeorm 에서 relation 의 출력 순서를 바꾸려고 시도중 
       ( 아마, id 순으로 정렬되는 것 같은데, 현 시점에선 랜덤값이라 순서가 지멋대로 )
+    - typeorm 에서 join 의 일부 column 만 선택하고싶은데, 정보가 너무 없음
+      ( Error: Relation with property path email in entity was not found. )
+6. 2021/01/13
+    - typeorm 헤메는 중.. 이걸 써야하나..
+    - join table 에 대한 상세조정이 안되서 typeorm 은 실전에서 쓰는건 보류해야할 듯.

@@ -28,7 +28,19 @@ export class TimelineService {
     }
 
     getPost(pid: string) {
-        return Post.findOne(pid);
+        return Post
+            // .createQueryBuilder("post")
+            // .where("post.id = :id", { id: pid });
+            .findOne(pid, {
+            select: ["content", "picture", "pid", "writedAt"],
+            relations: ["writer"],
+            // join: {
+            //     alias: "writer",
+            //     leftJoinAndSelect: {
+            //         email: "user.email",
+            //     }
+            // }
+        });
     }
 
     // 게시글 작성

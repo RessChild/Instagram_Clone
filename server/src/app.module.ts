@@ -9,6 +9,7 @@ import { User } from './entities/user.entity';
 import { IdentifyService } from './identify/identify.service';
 import { IdentifyController } from './identify/identify.controller';
 import { IdentifyModule } from './identify/identify.module';
+import { Comment } from './entities/comment.entity';
 
 @Module({
   imports: [
@@ -26,7 +27,7 @@ import { IdentifyModule } from './identify/identify.module';
           }
         },
         // 사용할 TABLE 객체 정보
-        "entities": [User, Post],
+        "entities": [User, Post, Comment],
         "synchronize": true, // TABLE 자동 생성
       }),
     TimelineModule,

@@ -1,4 +1,5 @@
-import { BaseEntity, Column, Entity, ManyToOne, PrimaryColumn, PrimaryGeneratedColumn } from "typeorm";
+import { BaseEntity, Column, Entity, ManyToOne, OneToMany, PrimaryColumn, PrimaryGeneratedColumn } from "typeorm";
+import { Comment } from "./comment.entity";
 import { User } from "./user.entity";
 
 @Entity("post", { orderBy: { writedAt: "DESC" }}) // 생성할 이름, 추가 옵션 (정렬)
@@ -19,4 +20,7 @@ export class Post extends BaseEntity {
     // 관계 맺기
     @ManyToOne(type => User, user => user.posts, { nullable: false, onDelete: 'CASCADE' })
     writer: User; // 각 게시글의 작성자는 유일
+    
+    @OneToMany( type => Comment, comment => comment.post)
+    comments: Comment[];
 }

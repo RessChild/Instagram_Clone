@@ -5,7 +5,8 @@ export const PostInit = {
         writedAt: '',
         pinture: [],
         content: '',
-        // comments: [],
+        comments: [],
+        writer: {},
     }
 }
 

@@ -1,11 +1,14 @@
 import React, { useEffect, useReducer } from "react";
 import axios from "axios";
-import { Box, IconButton } from "@material-ui/core";
+import { Box, Button, IconButton, Input, InputAdornment, Link, TextField } from "@material-ui/core";
 import { useTransition, animated } from "react-spring";
 
 import { MdKeyboardArrowLeft, MdKeyboardArrowRight } from "react-icons/md";
-import { BsPlusSquareFill } from "react-icons/bs";
+import { BsThreeDots } from "react-icons/bs";
 import { CHANGE_DATA, PostInit, PostReduce } from "./reducer/PostReducer";
+
+import IMG from "../../sources/instagram_logo.png";
+import Comment from "../../components/Comment/Comment";
 
 // react-spring 참고 링크
 // https://www.react-spring.io/docs/hooks/examples
@@ -17,7 +20,7 @@ const Post = ({ pid }) => {
 
     const [ state, dispatch ] = useReducer(PostReduce, PostInit);
     const { isLoading, page, post } = state;
-    const { picture, content } = post;
+    const { picture, content, writer, comments } = post;
 
     // const [ page, setPage ] = useState(0); // 현재 페이지 번호
     // const [ images, setImages ] = useState([]); // 이미지 리스트
@@ -60,24 +63,23 @@ const Post = ({ pid }) => {
         }
     }, []);
 
-    // useEffect(() => {
-    //     console.log(post);
-    // }, [post]);
+    // 상단 버튼
+    const onClickProfileMenu = () => {
+        alert("버튼버튼")
+    }
 
     return (
         isLoading
         ? <>로딩중...</>
         :
         <Box width="100vw" maxWidth="50rem" display="flex">
-            <Box id="img-space" flex={5} position="relative" minHeight="50vh" maxHeight="80vh">
+            <Box id="img-space" flex={5} position="relative" minHeight="60vh" maxHeight="80vh">
                 { // 실제 화면을 띄우는 위치. animation 객체를 사용
                     transitions.map(({ item, props, key }) => {
                         return <animated.div key={key} props={props} /* style={{ position: "absolute", width: "100%", height: "100%" }}*/>
                             <Box position="absolute" width="100%" height="100%" bgcolor="white"
                                 display="flex" alignItems="center" justifyContent="center">
-                                { picture[item] 
-                                    ? <img src={`/api/timeline/html-img/${picture[item]}`} alt={`등록 이미지 - ${item}`} style={{ minWidth: "50%", maxWidth: "100%", minHeight: "50%", maxHeight: "100%" }} /> 
-                                    : <BsPlusSquareFill size="5rem" /> }
+                                { picture[item] && <img src={`/api/timeline/html-img/${picture[item]}`} alt={`등록 이미지 - ${item}`} style={{ minWidth: "50%", maxWidth: "100%", minHeight: "50%", maxHeight: "100%" }} /> }
                             </Box>
                         </animated.div>;
                     })
@@ -91,16 +93,89 @@ const Post = ({ pid }) => {
                     </IconButton>
                 }
                 { // 우측에 추가 이미지가 있을 때만 활성화
-                    page < picture.length &&
+                    page < picture.length - 1 &&
                     <IconButton id="img-btn-right" onClick={onClickRight}
                         style={{ position: "absolute", right: "0", top: "50%", transform: "translateY(-50%)" }}>
                         <MdKeyboardArrowRight />
                     </IconButton>
                 }
             </Box>
-            <Box id="text-space" flex={3} borderLeft={1} borderColor="#aaaaaa" display="flex" flexDirection="column">
-                <Box>작성자정보</Box>
-                <Box>내용내여ㅛㅇ</Box>
+            <Box id="text-space" flex={3} borderLeft={1} maxHeight="100%" display="flex" flexDirection="column" borderColor="#aaaaaa"
+                overflow="auto" height="100%" maxHeight="60vh" position="relative">
+                <Box borderBottom={1} height="4rem" display="flex" alignItems="center" justifyContent="center"
+                    position="absolute" top="0" width="100%">
+                    <Box flex={3} display="flex" justifyContent="center">
+                        <img src={IMG} alt="user-profile"
+                            style={{ width: "2.4rem", height: "2.4rem", borderRadius: "1.2rem", border: "2px red solid" }}/>
+                    </Box>
+                    <Box flex={7} fontWeight="600">
+                        { writer.email }
+                    </Box>
+                    <IconButton onClick={onClickProfileMenu}>
+                        <BsThreeDots />
+                    </IconButton>
+                </Box>
+                <Box marginTop="4rem" marginBottom="10rem" overflow="auto">
+                1<br />
+                2<br />
+                3<br />
+                4<br />
+                5<br />
+                6<br />
+                7<br />
+                8<br />
+                9<br />
+                0<br />
+                1<br />
+                2<br />
+                3<br />
+                4<br />
+                5<br />
+                6<br />
+                7<br />
+                8<br />
+                9<br />
+                0<br />
+                1<br />
+                2<br />
+                3<br />
+                4<br />
+                5<br />
+                6<br />
+                7<br />
+                8<br />
+                9<br />
+                0<br />
+                1<br />
+                2<br />
+                3<br />
+                4<br />
+                5<br />
+                6<br />
+                7<br />
+                8<br />
+                9<br />
+                0<br />
+                {
+                    // 현재는 덧글 수가 늘어나면 그 크기만큼 높이가 늘어남    
+                    // comments.map( comment => <Comment />)   
+                }
+                </Box>
+                <Box position="absolute" bottom="0">
+                    <Box height="6.5rem" bgcolor="red">
+                        게시글 관련 각종 툴 (좋아요, 실시간 상황 이런거..?)
+                    </Box>
+                    <Box height="3.5rem" display-="flex" flexDirection="column">
+                        <Input style={{ width: "100%", height: "100%", padding: "0 4%" }}
+                            disableUnderline={true} placeholder="댓글 달기..."
+                            endAdornment={
+                                <InputAdornment position="end">
+                                  <Button style={{ color: "blue", fontWeight: "600" }}>게시</Button>
+                                </InputAdornment>
+                            } />
+                    </Box>
+
+                </Box>
             </Box>
         </Box>
     )
