@@ -1,12 +1,14 @@
-import React, { useEffect, useReducer } from "react";
+import React, { useEffect, useReducer, useState } from "react";
 import axios from "axios";
 import { Box, Button, IconButton, Input, InputAdornment, Link, TextField } from "@material-ui/core";
 import { useTransition, animated } from "react-spring";
 
 import { MdKeyboardArrowLeft, MdKeyboardArrowRight } from "react-icons/md";
 import { BsThreeDots } from "react-icons/bs";
-import { CHANGE_DATA, PostInit, PostReduce } from "./reducer/PostReducer";
+import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
+import { IoChatbubbleOutline, IoPaperPlaneOutline } from "react-icons/io5";
 
+import { CHANGE_DATA, PostInit, PostReduce } from "./reducer/PostReducer";
 import IMG from "../../sources/instagram_logo.png";
 import Comment from "../../components/Comment/Comment";
 
@@ -21,6 +23,12 @@ const Post = ({ pid }) => {
     const [ state, dispatch ] = useReducer(PostReduce, PostInit);
     const { isLoading, page, post } = state;
     const { picture, content, writer, comments } = post;
+    // 버튼 사용 가능 여부
+    const [ disabled, setDisabled ] = useState({
+        newComment: true,
+    })
+    // 새 덧글
+    const [ newComment, setNewComment ] = useState('');
 
     // const [ page, setPage ] = useState(0); // 현재 페이지 번호
     // const [ images, setImages ] = useState([]); // 이미지 리스트
@@ -66,6 +74,27 @@ const Post = ({ pid }) => {
     // 상단 버튼
     const onClickProfileMenu = () => {
         alert("버튼버튼")
+    }
+
+    // 하단 버튼 ( 좋아요, 내보내기, 태그 )
+    const onClickIcon = () => {
+        alert("버튼버튼");
+    }
+    // 게시글 입력
+    const onChangeAddCommnet = ({ target: { name, value }}) => {
+        setDisabled({ [name]: !value.trim() });
+        setNewComment(value);
+    }
+    const onClickAddComment = () => {
+        if(disabled.newComment) return alert("등록 불가능");
+        axios.post(`/api/timeline/add-comment/${pid}`, { jwt: localStorage.getItem('access_token'), content: newComment }, { cancelToken: source.token })
+            .then( ({ data }) => {
+                console.log(data);
+            })
+            .catch( e => {
+                if(axios.isCancel(e)) return;
+                alert(e);
+            })
     }
 
     return (
@@ -161,20 +190,30 @@ const Post = ({ pid }) => {
                     // comments.map( comment => <Comment />)   
                 }
                 </Box>
-                <Box position="absolute" bottom="0">
-                    <Box height="6.5rem" bgcolor="red">
-                        게시글 관련 각종 툴 (좋아요, 실시간 상황 이런거..?)
+                <Box position="absolute" bottom="0" width="100%">
+                    <Box height="5.5rem" borderTop={1} padding="0.5rem">
+                        <Box display="flex" justifyContent="space-between">
+                            <Box display="flex" width="40%" alignItems="center" justifyContent="space-between">
+                                <AiOutlineHeart size="2rem" onClick={onClickIcon} style={{ cursor: "pointer" }} />
+                                <IoChatbubbleOutline size="2rem" onClick={onClickIcon} style={{ cursor: "pointer" }} />
+                                <IoPaperPlaneOutline size="2rem" onClick={onClickIcon} style={{ cursor: "pointer" }}  />
+                            </Box>
+                            <Box>매옹</Box>
+                        </Box>
+                        <Box>정보</Box>
+                        <Box fontSize="0.7rem" color="grey">날짜</Box>
                     </Box>
-                    <Box height="3.5rem" display-="flex" flexDirection="column">
+                    <Box height="3.5rem" borderTop={1} display-="flex" flexDirection="column">
                         <Input style={{ width: "100%", height: "100%", padding: "0 4%" }}
+                            name="newComment" value={newComment} onChange={onChangeAddCommnet}
                             disableUnderline={true} placeholder="댓글 달기..."
                             endAdornment={
                                 <InputAdornment position="end">
-                                  <Button style={{ color: "blue", fontWeight: "600" }}>게시</Button>
+                                  <Button disabled={disabled.newComment} onClick={onClickAddComment}
+                                    style={{ color: disabled.newComment ? "#99ccff" : "blue", fontWeight: "600" }}>게시</Button>
                                 </InputAdornment>
                             } />
                     </Box>
-
                 </Box>
             </Box>
         </Box>

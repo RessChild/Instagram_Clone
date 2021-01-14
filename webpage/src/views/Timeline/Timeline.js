@@ -51,7 +51,6 @@ const Timeline = ({ history, location, match }) => {
         }
     }, [])
 
-
     // 다이얼로그 창
     const [ dialog, setDialog ] = useState('');
     const onCloseDialog = () => setDialog(''); // 창 닫기

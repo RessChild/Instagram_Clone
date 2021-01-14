@@ -2,6 +2,7 @@ import { Body, Controller, Get, Header, Param, Post, Put, Res, UploadedFiles, Us
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { TimelineService } from './timeline.service';
 import { diskStorage } from "multer";
+import { writer } from 'repl';
 
 @Controller('/api/timeline')
 export class TimelineController {
@@ -17,7 +18,10 @@ export class TimelineController {
         const user = await this.timelineService.userTimeline(email);
         return {
             login: jwt,
-            timeline: user[0] || null,
+            timeline: user[0]
+                // 등록 순서로 정렬하여 반환
+                ? { ...user[0], posts: user[0].posts.sort((a: any,b: any) => b.writedAt - a.writedAt ) } 
+                : null,
         };
     }
 
@@ -26,7 +30,21 @@ export class TimelineController {
         // console.log("post detail");
         const result = await this.timelineService.getPost(pid);
         console.log(result);
-        return result;
+        return {
+            ...result,
+            writer: { // 필요한 정보만 필터링
+                id: result.writer.id,
+                email: result.writer.email,
+            }
+        };
+    }
+
+    // 덧글 작성
+    @Post('/add-comment/:pid')
+    async addComment(@Param('pid') pid: string, @Body() body) {
+        const { jwt, content } = body; // 정보 추출
+        console.log(jwt, content);
+        return 'i will add new commnet';
     }
 
     // 게시글 등록
@@ -50,11 +68,9 @@ export class TimelineController {
         return await this.timelineService.writePost(email, files.map(file => file.filename), text);
     }
 
+    // 이미지 미리보기
     @Get('/html-img/:file_name')
-    // @Header('Content-Type','application/octet-stream') // 이미지 형태를 전송하기 위해선 response 의 헤더를 수정해야 함
-    // @Header('Content-Type','image/*') // 이미지 형태를 전송하기 위해선 response 의 헤더를 수정해야 함
-    @Header('content-type', 'image/*; charset=base64')
-    // @Header('X-Content-Type-Options', 'nosniff')
+    @Header('content-type', 'image/*; charset=base64') // 이미지 형태를 전송하기 위해선 response 의 헤더를 수정해야 함
     async htmlImg (@Param('file_name') filename, @Res() res) {
         console.log(filename);
 
