@@ -146,7 +146,7 @@ const Post = ({ pid }) => {
                     position="absolute" top="0" width="100%">
                     <Box flex={3} display="flex" justifyContent="center">
                         <img src={IMG} alt="user-profile"
-                            style={{ width: "2rem", height: "2rem", borderRadius: "1.2rem", border: "2px red solid" }}/>
+                            style={{ width: "2rem", height: "2rem", borderRadius: "1rem", border: "2px red solid" }}/>
                     </Box>
                     <Box flex={8} fontWeight="600">
                         { writer.email }

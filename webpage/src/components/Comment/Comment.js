@@ -8,17 +8,27 @@ const Comment = ({ comment }) => {
     const { writer, content, writedAt } = comment || {};
     const { email } = writer;
     // console.log(comment);
-    return <Box display="flex" marginTop="1rem" marginBottom="1rem">
+    return <Box display="flex" marginTop="1.2rem" marginBottom="1.2rem">
         <Box flex={3} display="flex" justifyContent="center" id="comment-profile">
             <img src={IMG} alt="user-profile"
-                style={{ width: "2rem", height: "2rem", borderRadius: "1.2rem", border: "2px red solid" }}/>
+                style={{ width: "2rem", height: "2rem", borderRadius: "1rem", border: "2px red solid" }}/>
         </Box>
-        <Box flex={8} id="comment-content" display="flex" width="100%" whiteSpace="wrap" style={{ wordBreak: "break-all" }}>
-            <Box display="contents" fontWeight="600" whiteSpace="nowrap">{ email }</Box>
-            &nbsp;&nbsp;
-            { content }
+        <Box id="comment-content" flex={8} width="100%" overflow="hidden">
+            <Box display="flex" width="100%" whiteSpace="wrap" style={{ wordBreak: "break-all" }}>
+                <Box display="contents" fontWeight="600" whiteSpace="nowrap">{ email }</Box>
+                &nbsp;&nbsp;
+                { content }
+            </Box>
+
+            <Box display="flex" justifyContent="space-between"
+                marginTop="0.5rem" fontSize="0.7rem" color="#999999">
+                <Box>
+                    { writedAt.slice(0,10) }
+                </Box>
+                <Box>좋아요</Box>
+                <Box>답글</Box>
+            </Box>
         </Box>
-        {/* <Box fontSize="0.7rem">{ writedAt }</Box> */}
         <IconButton style={{ margin: "0.1rem" }}><AiOutlineHeart size="0.8rem"/></IconButton>
         </Box>
 }
