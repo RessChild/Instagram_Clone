@@ -6,6 +6,7 @@ import { Repository } from 'typeorm';
 
 import * as path from "path"; // 경로
 import * as fs from "fs"; // 파일 입출력
+import { Comment } from 'src/entities/comment.entity';
 
 @Injectable()
 export class TimelineService {
@@ -15,7 +16,10 @@ export class TimelineService {
         private readonly userRepository: Repository<User>,
         // 게시글 DB
         @InjectRepository(Post)
-        private readonly postRepository: Repository<Post>
+        private readonly postRepository: Repository<Post>,
+        // 덧글 DB
+        @InjectRepository(Comment)
+        private readonly commentRepository: Repository<Comment>
     ) {}
 
     // 타임라인 출력
@@ -27,20 +31,51 @@ export class TimelineService {
             });
     }
 
+    // 게시글 정보
     getPost(pid: string) {
         return Post
             // .createQueryBuilder("post")
             // .where("post.id = :id", { id: pid });
             .findOne(pid, {
             select: ["content", "picture", "pid", "writedAt"],
-            relations: ["writer"],
-            // join: {
-            //     alias: "writer",
-            //     leftJoinAndSelect: {
-            //         email: "user.email",
-            //     }
-            // }
+            // relations: ["writer", "comments"],
+            join: {
+                alias: "post", // 루트에 붙일 별명
+                leftJoinAndSelect: { // join 정보
+                    writer: "post.writer",
+                    comments: "post.comments"
+                },
+            }
         });
+    }
+
+    // 덧글 정보 ( 내용, 작성자 )
+    async getComments ( cid: number[] ) {
+        // 정보가 없으면 예외처리
+        if( !cid.length ) return [];
+        const comments = await this.commentRepository
+            .createQueryBuilder("comment")
+            .where("comment.id IN (:arr)", { arr: cid })
+            // join 할 참조변수, 대상 table
+            .innerJoinAndSelect("comment.writer", "user")
+            .orderBy("comment.writedAt")
+            .getMany();
+        // console.log(comments);
+        return comments;
+        // .find({ id: In(cid) })
+    }
+
+    // 덧글 작성
+    async addComment ( pid: string, email: string, content: string ) {
+        const user = await this.userRepository.findOne({ email: email });
+        const post = await this.postRepository.findOne(pid);
+        const result = await this.commentRepository.create({
+            writer: user,
+            post: post,
+            content: content,
+        }).save();
+        // console.log("add new comment in here");
+        return result;
     }
 
     // 게시글 작성

@@ -7,6 +7,7 @@ import { MdKeyboardArrowLeft, MdKeyboardArrowRight } from "react-icons/md";
 import { BsThreeDots } from "react-icons/bs";
 import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
 import { IoChatbubbleOutline, IoPaperPlaneOutline } from "react-icons/io5";
+import { BsBookmark, BsBookmarkFill } from "react-icons/bs";
 
 import { CHANGE_DATA, PostInit, PostReduce } from "./reducer/PostReducer";
 import IMG from "../../sources/instagram_logo.png";
@@ -26,6 +27,11 @@ const Post = ({ pid }) => {
     // 버튼 사용 가능 여부
     const [ disabled, setDisabled ] = useState({
         newComment: true,
+    })
+    // 기능 활성화 여부 ( 좋아요, 북태그 )
+    const [ actived, setActived ] = useState({
+        like: false,
+        bookmark: false,
     })
     // 새 덧글
     const [ newComment, setNewComment ] = useState('');
@@ -76,20 +82,25 @@ const Post = ({ pid }) => {
         alert("버튼버튼")
     }
 
-    // 하단 버튼 ( 좋아요, 내보내기, 태그 )
-    const onClickIcon = () => {
-        alert("버튼버튼");
+    // 하단 버튼 ( 좋아요, 북마크 )
+    const onClickIcon = ({ currentTarget: { id }}) => {
+        console.log(id);
+        setActived({ ...actived, [id]: !actived[id] });
     }
     // 게시글 입력
     const onChangeAddCommnet = ({ target: { name, value }}) => {
         setDisabled({ [name]: !value.trim() });
         setNewComment(value);
     }
+    
+    // 덧글 입력
     const onClickAddComment = () => {
         if(disabled.newComment) return alert("등록 불가능");
         axios.post(`/api/timeline/add-comment/${pid}`, { jwt: localStorage.getItem('access_token'), content: newComment }, { cancelToken: source.token })
             .then( ({ data }) => {
                 console.log(data);
+                setNewComment(''); // 글 비우기
+                axiosPost(); // 리로딩
             })
             .catch( e => {
                 if(axios.isCancel(e)) return;
@@ -129,15 +140,15 @@ const Post = ({ pid }) => {
                     </IconButton>
                 }
             </Box>
-            <Box id="text-space" flex={3} borderLeft={1} maxHeight="100%" display="flex" flexDirection="column" borderColor="#aaaaaa"
-                overflow="auto" height="100%" maxHeight="60vh" position="relative">
+            <Box id="text-space" flex={3} borderLeft={1} display="flex" flexDirection="column" borderColor="#aaaaaa"
+                overflow="auto" maxHeight="60vh" position="relative">
                 <Box borderBottom={1} height="4rem" display="flex" alignItems="center" justifyContent="center"
                     position="absolute" top="0" width="100%">
                     <Box flex={3} display="flex" justifyContent="center">
                         <img src={IMG} alt="user-profile"
-                            style={{ width: "2.4rem", height: "2.4rem", borderRadius: "1.2rem", border: "2px red solid" }}/>
+                            style={{ width: "2rem", height: "2rem", borderRadius: "1.2rem", border: "2px red solid" }}/>
                     </Box>
-                    <Box flex={7} fontWeight="600">
+                    <Box flex={8} fontWeight="600">
                         { writer.email }
                     </Box>
                     <IconButton onClick={onClickProfileMenu}>
@@ -145,60 +156,27 @@ const Post = ({ pid }) => {
                     </IconButton>
                 </Box>
                 <Box marginTop="4rem" marginBottom="10rem" overflow="auto">
-                1<br />
-                2<br />
-                3<br />
-                4<br />
-                5<br />
-                6<br />
-                7<br />
-                8<br />
-                9<br />
-                0<br />
-                1<br />
-                2<br />
-                3<br />
-                4<br />
-                5<br />
-                6<br />
-                7<br />
-                8<br />
-                9<br />
-                0<br />
-                1<br />
-                2<br />
-                3<br />
-                4<br />
-                5<br />
-                6<br />
-                7<br />
-                8<br />
-                9<br />
-                0<br />
-                1<br />
-                2<br />
-                3<br />
-                4<br />
-                5<br />
-                6<br />
-                7<br />
-                8<br />
-                9<br />
-                0<br />
-                {
-                    // 현재는 덧글 수가 늘어나면 그 크기만큼 높이가 늘어남    
-                    // comments.map( comment => <Comment />)   
+                { // 현재는 덧글 수가 늘어나면 그 크기만큼 높이가 늘어남    
+                    comments.map( comment => <Comment comment={comment} /> )
                 }
                 </Box>
                 <Box position="absolute" bottom="0" width="100%">
                     <Box height="5.5rem" borderTop={1} padding="0.5rem">
                         <Box display="flex" justifyContent="space-between">
                             <Box display="flex" width="40%" alignItems="center" justifyContent="space-between">
-                                <AiOutlineHeart size="2rem" onClick={onClickIcon} style={{ cursor: "pointer" }} />
+                                { actived.like 
+                                    ? <AiFillHeart id="like" size="2rem" onClick={onClickIcon} style={{ cursor: "pointer" }} />
+                                    : <AiOutlineHeart id="like" size="2rem" onClick={onClickIcon} style={{ cursor: "pointer" }} />
+                                }
                                 <IoChatbubbleOutline size="2rem" onClick={onClickIcon} style={{ cursor: "pointer" }} />
                                 <IoPaperPlaneOutline size="2rem" onClick={onClickIcon} style={{ cursor: "pointer" }}  />
                             </Box>
-                            <Box>매옹</Box>
+                            <Box>
+                                { actived.bookmark 
+                                    ? <BsBookmarkFill id="bookmark" size="2rem" onClick={onClickIcon} style={{ cursor: "pointer" }} /> 
+                                    : <BsBookmark id="bookmark" size="2rem" onClick={onClickIcon} style={{ cursor: "pointer" }} />
+                                }
+                            </Box>
                         </Box>
                         <Box>정보</Box>
                         <Box fontSize="0.7rem" color="grey">날짜</Box>

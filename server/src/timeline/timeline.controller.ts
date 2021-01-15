@@ -27,15 +27,23 @@ export class TimelineController {
 
     @Get('/post/:pid')
     async getPost(@Param('pid') pid: string) {
-        // console.log("post detail");
         const result = await this.timelineService.getPost(pid);
-        console.log(result);
+        const comments = await this.timelineService.getComments(result.comments.map( comment => comment.id ));
+
         return {
             ...result,
             writer: { // 필요한 정보만 필터링
                 id: result.writer.id,
                 email: result.writer.email,
-            }
+            },
+            comments: comments.map( ({ writer, ...others }) => {
+                // 덧글작성자 정보 필터링
+                const { password, salt, ...infos } = writer;
+                return {
+                    ...others,
+                    writer: infos,
+                }
+            })
         };
     }
 
@@ -44,7 +52,8 @@ export class TimelineController {
     async addComment(@Param('pid') pid: string, @Body() body) {
         const { jwt, content } = body; // 정보 추출
         console.log(jwt, content);
-        return 'i will add new commnet';
+        return this.timelineService.addComment(pid, jwt, content);
+        // return 'i will add new commnet';
     }
 
     // 게시글 등록

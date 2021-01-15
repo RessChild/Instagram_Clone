@@ -1,4 +1,5 @@
 import { BaseEntity, Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Comment } from "./comment.entity";
 import { Post } from "./post.entity";
 
 @Entity()
@@ -24,4 +25,8 @@ export class User extends BaseEntity {
     // 참조할 DB 객체정보, 내 정보를 저장할 상대편 변수명
     @OneToMany(type => Post, post => post.writer)
     posts: Post[]; // 사용자는 다수의 게시글 작성
+
+    // 덧글과의 관계
+    @OneToMany(type => Comment, comment => comment.writer)
+    comments: Comment[];
 }
