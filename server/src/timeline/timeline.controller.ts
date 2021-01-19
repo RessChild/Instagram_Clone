@@ -88,8 +88,8 @@ export class TimelineController {
         return res.status(200).end(image);
     }
 
-    @Get('/create-post/:email')
+    @Get('/follow/:email')
     async a(@Param('email') email: string) {
-        return await this.timelineService.createPost(email);
+        return await this.timelineService.follow(email);
     }
 }

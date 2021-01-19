@@ -16,7 +16,7 @@ import NewPost from "../NewPost/NewPost";
 import Post from "../Post/Post";
 
 const maxWidth = "50rem";
-const borderColor = "grey.500"
+const borderColor = "#999999"
 
 const Timeline = ({ history, location, match }) => {
     const source = axios.CancelToken.source();

@@ -12,6 +12,7 @@ import { BsBookmark, BsBookmarkFill } from "react-icons/bs";
 import { CHANGE_DATA, PostInit, PostReduce } from "./reducer/PostReducer";
 import IMG from "../../sources/instagram_logo.png";
 import Comment from "../../components/Comment/Comment";
+import Loading from "../../views/Loading/Loading";
 
 // react-spring 참고 링크
 // https://www.react-spring.io/docs/hooks/examples
@@ -109,91 +110,96 @@ const Post = ({ pid }) => {
     }
 
     return (
-        isLoading
-        ? <>로딩중...</>
-        :
         <Box width="100vw" maxWidth="50rem" display="flex">
-            <Box id="img-space" flex={5} position="relative" minHeight="60vh" maxHeight="80vh">
-                { // 실제 화면을 띄우는 위치. animation 객체를 사용
-                    transitions.map(({ item, props, key }) => {
-                        return <animated.div key={key} props={props} /* style={{ position: "absolute", width: "100%", height: "100%" }}*/>
-                            <Box position="absolute" width="100%" height="100%" bgcolor="white"
-                                display="flex" alignItems="center" justifyContent="center">
-                                { picture[item] && <img src={`/api/timeline/html-img/${picture[item]}`} alt={`등록 이미지 - ${item}`} style={{ minWidth: "50%", maxWidth: "100%", minHeight: "50%", maxHeight: "100%" }} /> }
-                            </Box>
-                        </animated.div>;
-                    })
-                }
-                    {/* <img src={IMG} /> */}
-                { // 좌측에 추가 이미지가 있을 때만 활성화
-                    picture.length && 0 < page &&
-                    <IconButton id="img-btn-left" onClick={onClickLeft}
-                        style={{ position: "absolute", left: "0", top: "50%", transform: "translateY(-50%)" }}>
-                        <MdKeyboardArrowLeft />
-                    </IconButton>
-                }
-                { // 우측에 추가 이미지가 있을 때만 활성화
-                    page < picture.length - 1 &&
-                    <IconButton id="img-btn-right" onClick={onClickRight}
-                        style={{ position: "absolute", right: "0", top: "50%", transform: "translateY(-50%)" }}>
-                        <MdKeyboardArrowRight />
-                    </IconButton>
-                }
-            </Box>
-            <Box id="text-space" flex={3} borderLeft={1} display="flex" flexDirection="column" borderColor="#aaaaaa"
-                overflow="auto" maxHeight="60vh" position="relative">
-                <Box borderBottom={1} height="4rem" display="flex" alignItems="center" justifyContent="center"
-                    position="absolute" top="0" width="100%">
-                    <Box flex={3} display="flex" justifyContent="center">
-                        <img src={IMG} alt="user-profile"
-                            style={{ width: "2rem", height: "2rem", borderRadius: "1rem", border: "2px red solid" }}/>
+            {
+                isLoading
+                ? <Box width="100%" height="60vh" display="flex" alignItems="center" justifyContent="center">
+                    <img src={IMG} alt="로딩 이미지" style={{ maxHeight: "40%", maxWidth: "40%" }} />
                     </Box>
-                    <Box flex={8} fontWeight="600">
-                        { writer.email }
-                    </Box>
-                    <IconButton onClick={onClickProfileMenu}>
-                        <BsThreeDots />
-                    </IconButton>
+                : <>
+                    <Box id="img-space" flex={5} position="relative" minHeight="60vh" maxHeight="80vh">
+                    { // 실제 화면을 띄우는 위치. animation 객체를 사용
+                        transitions.map(({ item, props, key }) => {
+                            return <animated.div key={key} props={props} /* style={{ position: "absolute", width: "100%", height: "100%" }}*/>
+                                <Box position="absolute" width="100%" height="100%" bgcolor="white"
+                                    display="flex" alignItems="center" justifyContent="center">
+                                    { picture[item] && <img src={`/api/timeline/html-img/${picture[item]}`} alt={`등록 이미지 - ${item}`} style={{ minWidth: "50%", maxWidth: "100%", minHeight: "50%", maxHeight: "100%" }} /> }
+                                </Box>
+                            </animated.div>;
+                        })
+                    }
+                        {/* <img src={IMG} /> */}
+                    { // 좌측에 추가 이미지가 있을 때만 활성화
+                        picture.length && 0 < page &&
+                        <IconButton id="img-btn-left" onClick={onClickLeft}
+                            style={{ position: "absolute", left: "0", top: "50%", transform: "translateY(-50%)" }}>
+                            <MdKeyboardArrowLeft />
+                        </IconButton>
+                    }
+                    { // 우측에 추가 이미지가 있을 때만 활성화
+                        page < picture.length - 1 &&
+                        <IconButton id="img-btn-right" onClick={onClickRight}
+                            style={{ position: "absolute", right: "0", top: "50%", transform: "translateY(-50%)" }}>
+                            <MdKeyboardArrowRight />
+                        </IconButton>
+                    }
                 </Box>
-                <Box marginTop="4rem" marginBottom="10rem" overflow="auto">
-                { // 현재는 덧글 수가 늘어나면 그 크기만큼 높이가 늘어남    
-                    comments.map( comment => <Comment comment={comment} /> )
-                }
-                </Box>
-                <Box position="absolute" bottom="0" width="100%">
-                    <Box height="5.5rem" borderTop={1} padding="0.5rem">
-                        <Box display="flex" justifyContent="space-between">
-                            <Box display="flex" width="40%" alignItems="center" justifyContent="space-between">
-                                { actived.like 
-                                    ? <AiFillHeart id="like" size="2rem" onClick={onClickIcon} style={{ cursor: "pointer" }} />
-                                    : <AiOutlineHeart id="like" size="2rem" onClick={onClickIcon} style={{ cursor: "pointer" }} />
-                                }
-                                <IoChatbubbleOutline size="2rem" onClick={onClickIcon} style={{ cursor: "pointer" }} />
-                                <IoPaperPlaneOutline size="2rem" onClick={onClickIcon} style={{ cursor: "pointer" }}  />
-                            </Box>
-                            <Box>
-                                { actived.bookmark 
-                                    ? <BsBookmarkFill id="bookmark" size="2rem" onClick={onClickIcon} style={{ cursor: "pointer" }} /> 
-                                    : <BsBookmark id="bookmark" size="2rem" onClick={onClickIcon} style={{ cursor: "pointer" }} />
-                                }
-                            </Box>
+                <Box id="text-space" flex={3} borderLeft={1} display="flex" flexDirection="column" borderColor="#aaaaaa"
+                    overflow="auto" maxHeight="60vh" position="relative">
+                    <Box borderBottom={1} height="4rem" display="flex" alignItems="center" justifyContent="center"
+                        position="absolute" top="0" width="100%">
+                        <Box flex={3} display="flex" justifyContent="center">
+                            <img src={IMG} alt="user-profile"
+                                style={{ width: "2rem", height: "2rem", borderRadius: "1rem", border: "2px red solid" }}/>
                         </Box>
-                        <Box>정보</Box>
-                        <Box fontSize="0.7rem" color="grey">날짜</Box>
+                        <Box flex={8} fontWeight="600">
+                            { writer.email }
+                        </Box>
+                        <IconButton onClick={onClickProfileMenu}>
+                            <BsThreeDots />
+                        </IconButton>
                     </Box>
-                    <Box height="3.5rem" borderTop={1} display-="flex" flexDirection="column">
-                        <Input style={{ width: "100%", height: "100%", padding: "0 4%" }}
-                            name="newComment" value={newComment} onChange={onChangeAddCommnet}
-                            disableUnderline={true} placeholder="댓글 달기..."
-                            endAdornment={
-                                <InputAdornment position="end">
-                                  <Button disabled={disabled.newComment} onClick={onClickAddComment}
-                                    style={{ color: disabled.newComment ? "#99ccff" : "blue", fontWeight: "600" }}>게시</Button>
-                                </InputAdornment>
-                            } />
+                    <Box marginTop="4rem" marginBottom="10rem" overflow="auto">
+                    { // 현재는 덧글 수가 늘어나면 그 크기만큼 높이가 늘어남    
+                        comments.map( comment => <Comment comment={comment} /> )
+                    }
+                    </Box>
+                    <Box position="absolute" bottom="0" width="100%">
+                        <Box height="5.5rem" borderTop={1} padding="0.5rem">
+                            <Box display="flex" justifyContent="space-between">
+                                <Box display="flex" width="40%" alignItems="center" justifyContent="space-between">
+                                    { actived.like 
+                                        ? <AiFillHeart id="like" size="2rem" onClick={onClickIcon} style={{ cursor: "pointer" }} />
+                                        : <AiOutlineHeart id="like" size="2rem" onClick={onClickIcon} style={{ cursor: "pointer" }} />
+                                    }
+                                    <IoChatbubbleOutline size="2rem" onClick={onClickIcon} style={{ cursor: "pointer" }} />
+                                    <IoPaperPlaneOutline size="2rem" onClick={onClickIcon} style={{ cursor: "pointer" }}  />
+                                </Box>
+                                <Box>
+                                    { actived.bookmark 
+                                        ? <BsBookmarkFill id="bookmark" size="2rem" onClick={onClickIcon} style={{ cursor: "pointer" }} /> 
+                                        : <BsBookmark id="bookmark" size="2rem" onClick={onClickIcon} style={{ cursor: "pointer" }} />
+                                    }
+                                </Box>
+                            </Box>
+                            <Box>정보</Box>
+                            <Box fontSize="0.7rem" color="grey">날짜</Box>
+                        </Box>
+                        <Box height="3.5rem" borderTop={1} display-="flex" flexDirection="column">
+                            <Input style={{ width: "100%", height: "100%", padding: "0 4%" }}
+                                name="newComment" value={newComment} onChange={onChangeAddCommnet}
+                                disableUnderline={true} placeholder="댓글 달기..."
+                                endAdornment={
+                                    <InputAdornment position="end">
+                                    <Button disabled={disabled.newComment} onClick={onClickAddComment}
+                                        style={{ color: disabled.newComment ? "#99ccff" : "blue", fontWeight: "600" }}>게시</Button>
+                                    </InputAdornment>
+                                } />
+                        </Box>
                     </Box>
                 </Box>
-            </Box>
+                </>
+            }
         </Box>
     )
 }

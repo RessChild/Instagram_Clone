@@ -1,4 +1,4 @@
-import { BaseEntity, Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { BaseEntity, Column, Entity, JoinColumn, JoinTable, ManyToMany, OneToMany, PrimaryGeneratedColumn, RelationCount } from "typeorm";
 import { Comment } from "./comment.entity";
 import { Post } from "./post.entity";
 
@@ -29,4 +29,22 @@ export class User extends BaseEntity {
     // 덧글과의 관계
     @OneToMany(type => Comment, comment => comment.writer)
     comments: Comment[];
+
+    // 팔로우, 팔로잉
+    @ManyToMany(type => User, user => user.following)
+    // @JoinTable({
+    //     name: 'follower'
+    // })
+    follower: User[]; // 나를 따르는 사람
+    @ManyToMany(type => User, user => user.follower)
+    // @JoinTable({
+    //     name: 'following',
+    // })
+    following: User[]; // 내가 따르는 사람
+
+    @RelationCount((user: User) => user.follower)
+    followerCount: number;
+    
+    @RelationCount((user: User) => user.following)
+    followingCount: number;
 }

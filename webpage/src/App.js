@@ -1,7 +1,8 @@
 import './App.css';
-import Timeline from './views/Timeline/Timeline';
-
 import { BrowserRouter, Redirect, Route, Switch } from "react-router-dom"
+
+import Home from "./views/Home/Home";
+import Timeline from './views/Timeline/Timeline';
 import Login from './views/Login/Login';
 import Register from './views/Register/Register';
 
@@ -26,11 +27,12 @@ function App() {
   return (
     <BrowserRouter>
       <Switch>
+        <Route path="/" exact component={Home} />
         <Route path="/test" component={NewPost} />
         <Route path="/login" component={Login} />
         <Route path="/register" component={Register} />
         <Route path="/timeline/:email" component={Timeline} />
-        <Redirect to='/login'/>
+        <Redirect to='/'/>
       </Switch>
     </BrowserRouter>
   );

@@ -10,6 +10,8 @@ import { IdentifyService } from './identify/identify.service';
 import { IdentifyController } from './identify/identify.controller';
 import { IdentifyModule } from './identify/identify.module';
 import { Comment } from './entities/comment.entity';
+import { HomeService } from './home/home.service';
+import { HomeModule } from './home/home.module';
 
 @Module({
   imports: [
@@ -32,6 +34,7 @@ import { Comment } from './entities/comment.entity';
       }),
     TimelineModule,
     IdentifyModule,
+    HomeModule,
   ],
   controllers: [],
   providers: [],

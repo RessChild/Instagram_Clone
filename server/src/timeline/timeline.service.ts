@@ -104,16 +104,14 @@ export class TimelineService {
         // return `data:image/${type};base64, ${file.toString('base64')}`;
     }
 
-    async createPost (email: string) {
-        const user = await User.findOne(null, {
-            where: [{ email: email }]
-        })
-        // console.log(user);
-        const result = await Post.create({
-                writer: user,
-                picture: ['test', 'pictures'],
-            }).save();
-        // console.log("post result:", result);
-        return result;
+    async follow (email: string) {
+        console.log(email);
+        const user = await this.userRepository.createQueryBuilder('user')
+            .where("user.email = :email", { email: email })
+            .innerJoinAndSelect('user.following', 'user')
+            // .innerJoinAndSelect('user.follower', 'user')
+            .getOne()
+        console.log(user)
+        return user;
     }
 }
