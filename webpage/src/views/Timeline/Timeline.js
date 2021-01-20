@@ -1,6 +1,6 @@
 import React, { useEffect, useReducer, useState } from "react";
 import axios from "axios";
-import { Box, Dialog } from "@material-ui/core";
+import { Box, Button, Dialog } from "@material-ui/core";
 import Logo from "../../sources/instagram_title.png";
 
 import { IoPersonSharp, IoLogoInstagram } from "react-icons/io5";
@@ -69,6 +69,18 @@ const Timeline = ({ history, location, match }) => {
         setDialog(id);
     };
 
+    // 팔로우 옵션
+    const onClickFollow = () => {
+        axios.post('/api/follow', { jwt: localStorage.getItem('access_token'), following: email, type: true }, { cancelToken: source.token })
+            .then(({data}) => {
+                console.log(data);
+            })
+            .catch( e => {
+                if(axios.isCancel(e)) return;
+                alert(e);
+            })
+    }
+
     return (
         isLoading
         ? <Loading /> 
@@ -99,6 +111,7 @@ const Timeline = ({ history, location, match }) => {
                     <Box id="timeline-profile-email" marginBottom="1rem"
                         fontSize="1.7rem" fontWeight="fontWeightLight">
                         { email }
+                        <Button onClick={onClickFollow}>팔로우</Button>
                     </Box>
                     <Box id="timeline-profile-count" marginBottom="1rem"
                         display="flex" alignItems="space-between">

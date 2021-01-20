@@ -1,5 +1,6 @@
 import { BaseEntity, Column, Entity, JoinColumn, JoinTable, ManyToMany, OneToMany, PrimaryGeneratedColumn, RelationCount } from "typeorm";
 import { Comment } from "./comment.entity";
+import { Follow } from "./follow.entity";
 import { Post } from "./post.entity";
 
 @Entity()
@@ -31,20 +32,20 @@ export class User extends BaseEntity {
     comments: Comment[];
 
     // 팔로우, 팔로잉
-    @ManyToMany(type => User, user => user.following)
-    // @JoinTable({
-    //     name: 'follower'
-    // })
-    follower: User[]; // 나를 따르는 사람
-    @ManyToMany(type => User, user => user.follower)
-    // @JoinTable({
-    //     name: 'following',
-    // })
-    following: User[]; // 내가 따르는 사람
+    @OneToMany(type => Follow, follow => follow.following)
+    @JoinColumn({
+        name: 'follower'
+    })
+    follower: Follow[]; // 나를 따르는 사람
+    @OneToMany(type => Follow, follow => follow.follower)
+    @JoinColumn({
+        name: 'following',
+    })
+    following: Follow[]; // 내가 따르는 사람
 
-    @RelationCount((user: User) => user.follower)
+    // 숫자정보
+    @RelationCount((follow: Follow) => follow.follower)
     followerCount: number;
-    
-    @RelationCount((user: User) => user.following)
+    @RelationCount((follow: Follow) => follow.following)
     followingCount: number;
 }

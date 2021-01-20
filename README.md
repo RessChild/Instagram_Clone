@@ -77,6 +77,9 @@
     - 메인 페이지 구축하기
     - 팔로우 관련 기능 추가 필요
 10. 2021/01/19
-    - 팔로우 기능도 크게 2가지로 만드는듯?
+    - 팔로우 기능도 크게 2가지로 만드는 듯
         1. 직접 user entity 끼리 연결짓기 (many to many)
         2. follow 라는 객체를 통해서 연결하기 ( 2개의 one to many )
+    - Cannot read property 'tablePath' of undefined
+        : manyToMany 로 하려니까 현재 발생하는 오류
+    - 그래서 객체를 중간에 두는 형태로 우선 제작하려고 함

@@ -12,6 +12,8 @@ import { IdentifyModule } from './identify/identify.module';
 import { Comment } from './entities/comment.entity';
 import { HomeService } from './home/home.service';
 import { HomeModule } from './home/home.module';
+import { Follow } from './entities/follow.entity';
+import { FollowModule } from './follow/follow.module';
 
 @Module({
   imports: [
@@ -29,12 +31,13 @@ import { HomeModule } from './home/home.module';
           }
         },
         // 사용할 TABLE 객체 정보
-        "entities": [User, Post, Comment],
+        "entities": [User, Post, Comment, Follow],
         "synchronize": true, // TABLE 자동 생성
       }),
     TimelineModule,
     IdentifyModule,
     HomeModule,
+    FollowModule,
   ],
   controllers: [],
   providers: [],

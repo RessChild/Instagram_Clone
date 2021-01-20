@@ -12,12 +12,12 @@ export class HomeController {
 
     @Post()
     async getFollowPosts (@Body('jwt') user: string) { // 사용자 정보
-        const { password, salt, ...others } = await this.homeService.getFollowPosts(user);
-        console.log("home:", user, others);
-        
-        return {
-            ...others,
-            posts: others.posts.sort((a: any,b: any) => b.writedAt - a.writedAt),
-        }
+        const result = await this.homeService.getFollowPosts(user);
+        console.log("home:", user, result);
+        // return result;
+        // return {
+        //     ...others,
+        //     posts: others.posts.sort((a: any,b: any) => b.writedAt - a.writedAt),
+        // }
     }
 }

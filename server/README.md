@@ -20,3 +20,5 @@
 - innerJoin 과 leftJoin 의 차이점 ( 중복정보만으로 테이블 구성 or 모든 정보로 테이블 구성 )
 - typeorm 의 join 의 경우, 2가지 정보가 필요 ( alias: 루트를 부를 별명, join 정보 )
   하지만 구동에 있어서 별 차이는 없는 듯 함..
+- typeorm 의 @JoinTable 은 table 을 새로 생성하니까 주의할 것
+- remove: 객체로 삭제 / delete: id 혹은 상태값으로 삭제
