@@ -15,9 +15,17 @@ export class HomeController {
         const result = await this.homeService.getFollowPosts(user);
         console.log("home:", user, result);
         // return result;
-        // return {
-        //     ...others,
-        //     posts: others.posts.sort((a: any,b: any) => b.writedAt - a.writedAt),
-        // }
+        return {
+            email: user,
+            posts: result
+                .map(({ writer, ...others }) => {
+                    const { id, email, username } = writer;
+                    return {
+                        ...others,
+                        writer: { id, email, username }
+                    }
+                })
+                .sort((a: any,b: any) => b.writedAt - a.writedAt),
+        }
     }
 }

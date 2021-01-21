@@ -1,13 +1,15 @@
 import { Box, IconButton } from "@material-ui/core";
 import React, { useState } from "react"
+import { Link } from "react-router-dom";
 
 import { MdKeyboardArrowLeft, MdKeyboardArrowRight } from "react-icons/md";
 import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
 import { IoChatbubbleOutline, IoPaperPlaneOutline } from "react-icons/io5";
-import { BsBookmarkFill, BsBookmark } from "react-icons/bs";
+import { BsBookmarkFill, BsBookmark, BsThreeDots} from "react-icons/bs";
 
 import GridContainer from "../GridContainer/GridContainer";
 import GridItem from "../GridItem/GridItem";
+import IMG from "../../sources/instagram_logo.png";
 
 const borderColor = "#c7c7c7";
 
@@ -30,15 +32,34 @@ const TimeCard = ({ post }) => {
         setActived({ ...actived, [id]: !actived[id] });
     }
 
-    const { picture } = post;
+    const { picture, writer } = post;
+
+    // 프로필 메뉴 클릭
+    const onClickProfileMenu = () => {
+        alert("버튼 클릭");
+    }
 
     console.log(post);
     return (
         <Box width="100%" bgcolor="#ffffff" marginBottom="3rem"
             display="flex" flexDirection="column" border={1} borderColor={borderColor}>
             <Box id="writer-email" height="3.5rem" borderBottom={1} borderColor={borderColor}
-                display="flex" alignItems="center">
-                    애옹
+                display="flex" alignItems="center" justifyContent="space-between">
+                <Box display="flex" alignItems="center">
+                    <Box display="flex" justifyContent="center" marginLeft="1rem" marginRight="1rem">
+                        <img src={IMG} alt="user-profile"
+                            style={{ width: "2rem", height: "2rem", borderRadius: "1rem", border: "2px red solid" }}/>
+                    </Box>
+                    <Link to={`/timeline/${writer.email}`}
+                        // onMouseOver="this.style.textDecorationLine='underline'"
+                        // onMouseOut="this.style.textDecorationLine='none'"
+                        style={{ color:"#000000", fontWeight: "600", textDecoration: "none" }}>
+                        { writer.email }
+                    </Link>
+                </Box>
+                <IconButton onClick={onClickProfileMenu}>
+                    <BsThreeDots />
+                </IconButton>
             </Box>
             <Box minHeight="10rem" position="relative"
                 display="flex" alignItems="center" justifyContent="center">

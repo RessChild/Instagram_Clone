@@ -160,9 +160,7 @@ const Post = ({ pid }) => {
                         </IconButton>
                     </Box>
                     <Box marginTop="4rem" marginBottom="10rem" overflow="auto">
-                    { // 현재는 덧글 수가 늘어나면 그 크기만큼 높이가 늘어남    
-                        comments.map( comment => <Comment comment={comment} /> )
-                    }
+                        { comments.map( comment => <Comment comment={comment} /> ) }
                     </Box>
                     <Box position="absolute" bottom="0" width="100%">
                         <Box height="5.5rem" borderTop={1} padding="0.5rem">

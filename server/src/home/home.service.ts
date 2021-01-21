@@ -27,15 +27,14 @@ export class HomeService {
         // 팔로우한 사람들 목록 출력
         const following = await this.followRepository.createQueryBuilder('follow')
             .where("follow.follower = :user", { user: id })
+            .leftJoinAndSelect("follow.following", "user")
             .getMany();
-        console.log(following);
 
         if( !following.length ) return [];
         const result = await this.postRepository.createQueryBuilder('post')
-            .where('post.writer IN :writer', { writer: following.map(({ following }) => following ) })
+            .where('post.writer IN (:writer)', { writer: following.map(({ following }) => following.id ) })
             .leftJoinAndSelect('post.writer','user')
             .getMany();
-        console.log(result);
         return result;
     }
 }

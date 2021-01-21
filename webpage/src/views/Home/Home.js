@@ -9,6 +9,7 @@ import Loading from "../Loading/Loading";
 import TimeCard from "../../components/TimeCard/TimeCard";
 import { CHANGE_DATA, homeInit, homeReduce } from "./Reducer/HomeReducer";
 
+import IMG from "../../sources/instagram_logo.png";
 
 // 메인 페이지 (홈)
 const Home = () => {
@@ -60,7 +61,7 @@ const Home = () => {
                     borderBottom={1} borderColor="#999999">
                     <Box display="flex" width="100vw" maxWidth="50rem" margin="auto" height="4rem"
                         alignItems="center" justifyContent="space-between">
-                        <Box id="timeline-header-logo">
+                        <Box id="timeline-header-logo" display="flex" alignItems="center">
                             <img title="instagram-logo" src={Logo} style={{ height: "8rem", width: "auto" }} />
                         </Box>
                         <Box id="timeline-header-user">{ email }</Box>
@@ -73,7 +74,19 @@ const Home = () => {
                                 posts.map( post => <TimeCard post={post} /> )
                             }
                         </Box>
-                        <Box flex={1}>개인 프로필정보</Box>
+                        <Box flex={1} padding="2rem" display="flex" flexDirection="column">
+                            { /* 여기 고정위치로 수정할것 */ }
+                            <Box id="my-profile" display="flex" alignItems="center">
+                                <Box marginRight="1rem" display="flex" alignItems="center">
+                                    <img src={IMG} alt="my-profile-image"
+                                        style={{ width: "3rem", height: "3rem", borderRadius: "1.5rem", border: "1px #999999 solid" }}/>
+                                </Box>
+                                <Box flex={1}>
+                                    <Box fontWeight="600">{ email }</Box>
+                                    <Box fontSize="0.8rem" color="#777777">사용자 이름 넣을 공간</Box>
+                                </Box>
+                            </Box>
+                        </Box>
                     </Box>
                 </Box>
             </Box>
