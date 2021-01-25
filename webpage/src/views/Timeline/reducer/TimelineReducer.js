@@ -8,17 +8,21 @@ export const TimelineInit = {
             post: 0, // 총 게시글
             follower: 0, // 팔로워
             following: 0, // 팔로우
-        }
+        },
+        onFollow: false,
     },
     posts: [], // 포스터 리스트
 }
 
 export const CHANGE_DATA = "CHANGE_DATA";
+export const CHANGE_DATA_STRUCT = "CHANGE_DATA_STRUCT";
 
 export const TimelineReduce = (state, action) => {
     switch(action.type) {
         case CHANGE_DATA:
             return { ...state, ...action.data };
+        case CHANGE_DATA_STRUCT: 
+            return { ...state, [action.target]: { ...state[action.target], ...action.data } };
         default:
             throw new Error("Unhandled timeline action");
     }

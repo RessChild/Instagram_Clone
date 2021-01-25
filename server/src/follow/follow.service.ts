@@ -25,13 +25,19 @@ export class FollowService {
             .where('user.email = :email', { email: following })
             .getOne();
         
-        const result = await this.followRepository.create({
+        
+        const follow = await this.followRepository.findOne(null, {
+            where: {
+                follower: follower_user,
+                following: following_user,
+            }});
+
+        if( follow ) return follow; // 이미 존재한다면 그냥 냅둠
+        return await this.followRepository.create({ // 없었으면 만들어서 반환
                 follower: follower_user,
                 following: following_user,
             })
             .save();
-        console.log(result);
-        return result;
     }
 
     async unfollow (follower: string, following: string) {
@@ -45,9 +51,11 @@ export class FollowService {
             .where('user.email = :email', { email: following })
             .getOne();
         
-        // const result = await this.followRepository.delete({
-        //     follower: follower_user.id,
-        //     following: following. id,
-        // })
+        // 팔로우 제거
+        const result = await this.followRepository.delete({
+            follower: follower_user,
+            following: following_user,
+        });
+        return result;
     }
 }

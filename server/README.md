@@ -22,3 +22,7 @@
   하지만 구동에 있어서 별 차이는 없는 듯 함..
 - typeorm 의 @JoinTable 은 table 을 새로 생성하니까 주의할 것
 - remove: 객체로 삭제 / delete: id 혹은 상태값으로 삭제
+- join 에서 다시 join 을 하려면, relation 에서 '.' 으로 호출
+  ( ex. follower.follower )
+- 1rem = 16px
+- window.innerWidth 사용

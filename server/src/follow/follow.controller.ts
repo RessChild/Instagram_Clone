@@ -12,6 +12,7 @@ export class FollowController {
     async follow (@Body('jwt') user: string, @Body('following') following: string, @Body('type') type :Boolean) {
         let result;
 
+        // return await this.followService.follow(user, following);
         if( type ) result = await this.followService.follow(user, following);
         else result = await this.followService.unfollow(user, following);
 

@@ -9,7 +9,7 @@ import { MdAddAPhoto } from "react-icons/md";
 
 import GridContainer from "../../components/GridContainer/GridContainer";
 import GridItem from "../../components/GridItem/GridItem";
-import { CHANGE_DATA, TimelineInit, TimelineReduce } from "./reducer/TimelineReducer";
+import { CHANGE_DATA, CHANGE_DATA_STRUCT, TimelineInit, TimelineReduce } from "./reducer/TimelineReducer";
 
 import Loading from "../Loading/Loading";
 import NewPost from "../NewPost/NewPost";
@@ -23,21 +23,24 @@ const Timeline = ({ history, location, match }) => {
 
     const { email } = match.params; // 주소로 넘어오는 정보 ( /:email )
     const [ state, dispatch ] = useReducer(TimelineReduce, TimelineInit);
-    const { login, username, posts, isLoading } = state;
+    const { login, user, posts, isLoading } = state;
+    // const { email, username, count } = user;
 
     const axiosTimeline = () => {
         dispatch({ type: CHANGE_DATA, data: { isLoading: true }});
         axios.post(`/api/timeline/profile/${email}`, { jwt: localStorage.getItem('access_token') }, { cancelToken: source.token })
             .then( ({ data: { login, timeline } }) => {
                 if( !timeline ) return console.log(`can't find user`);
-
-                console.log(login, timeline);
+        
+                // console.log(login, timeline );
+                const { posts, ...others } = timeline;
                 // 데이터 세팅
                 dispatch({ type: CHANGE_DATA,
                     data: {
                         isLoading: false,
                         login: login || '',
-                        ...timeline,
+                        user: others,
+                        posts: posts || [],
                     }
                 })
             })
@@ -71,9 +74,10 @@ const Timeline = ({ history, location, match }) => {
 
     // 팔로우 옵션
     const onClickFollow = () => {
-        axios.post('/api/follow', { jwt: localStorage.getItem('access_token'), following: email, type: true }, { cancelToken: source.token })
+        axios.post('/api/follow', { jwt: localStorage.getItem('access_token'), following: email, type: !user.onFollow }, { cancelToken: source.token })
             .then(({data}) => {
-                console.log(data);
+                // console.log(data);
+                dispatch({ type: CHANGE_DATA_STRUCT, target: "user", data: { onFollow: !user.onFollow }})
             })
             .catch( e => {
                 if(axios.isCancel(e)) return;
@@ -109,19 +113,24 @@ const Timeline = ({ history, location, match }) => {
                 </Box>
                 <Box id="timeline-profile-info" flex={2} >
                     <Box id="timeline-profile-email" marginBottom="1rem"
-                        fontSize="1.7rem" fontWeight="fontWeightLight">
-                        { email }
-                        <Button onClick={onClickFollow}>팔로우</Button>
+                        display="flex" alignItem="center">
+                        <Box marginRight="1.5rem" fontSize="1.8rem" fontWeight="fontWeightLight" >{ user.email }</Box>
+                        {
+                            login && login !== email &&
+                            <Button size="small" onClick={onClickFollow} style={{ border: "1px blue solid" }}>
+                            { user.onFollow ? "언팔로우" : "팔로우" }
+                            </Button>
+                        }
                     </Box>
                     <Box id="timeline-profile-count" marginBottom="1rem"
                         display="flex" alignItems="space-between">
-                        <Box flex={1}>게시글 <Box display="inline" fontWeight="fontWeightBold">3300</Box></Box>
-                        <Box flex={1}>팔로워 <Box display="inline" fontWeight="fontWeightBold">3300</Box></Box>
-                        <Box flex={1}>팔로우 <Box display="inline" fontWeight="fontWeightBold">3300</Box></Box>
+                        <Box flex={1}>게시글 <Box display="inline" fontWeight="fontWeightBold">{ user.count.post }</Box></Box>
+                        <Box flex={1}>팔로워 <Box display="inline" fontWeight="fontWeightBold">{ user.count.follower }</Box></Box>
+                        <Box flex={1}>팔로우 <Box display="inline" fontWeight="fontWeightBold">{ user.count.following }</Box></Box>
                     </Box>
                     <Box id="timeline-profile-introduce" fontSize="1rem">
                         <Box fontWeight="fontWeightBold">
-                            { username }
+                            { user.username }
                         </Box>
                         <Box>
                             자기소개

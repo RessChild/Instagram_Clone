@@ -39,7 +39,6 @@ const TimeCard = ({ post }) => {
         alert("버튼 클릭");
     }
 
-    console.log(post);
     return (
         <Box width="100%" bgcolor="#ffffff" marginBottom="3rem"
             display="flex" flexDirection="column" border={1} borderColor={borderColor}>

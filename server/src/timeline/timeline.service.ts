@@ -27,7 +27,7 @@ export class TimelineService {
         return User.find({
                 where: [{ email: email }],
                 select: ["email", "username", "registeredAt"],
-                relations: ["posts"],
+                relations: ["posts", "follower", "follower.follower"],
             });
     }
 

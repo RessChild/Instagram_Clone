@@ -15,12 +15,23 @@ export class TimelineController {
     @Post('/profile/:email')
     async userTimeline (@Param('email') email: string, @Body('jwt') jwt: string) {
         // console.log("timeline api", email);
-        const user = await this.timelineService.userTimeline(email);
+        const [ user ] = await this.timelineService.userTimeline(email);
+        const { follower, followerCount, followingCount, posts, ...others } = user;
+        // console.log(follower);
         return {
             login: jwt,
-            timeline: user[0]
+            timeline: user
                 // 등록 순서로 정렬하여 반환
-                ? { ...user[0], posts: user[0].posts.sort((a: any,b: any) => b.writedAt - a.writedAt ) } 
+                ? { 
+                    ...others,
+                    onFollow: follower.find(({ follower }) => follower.email === jwt),
+                    posts: posts.sort((a: any,b: any) => b.writedAt - a.writedAt).slice(0,12),
+                    count: {
+                        follower: followerCount,
+                        following: followingCount,
+                        post: posts.length,
+                    },
+                }
                 : null,
         };
     }
@@ -81,10 +92,9 @@ export class TimelineController {
     @Get('/html-img/:file_name')
     @Header('content-type', 'image/*; charset=base64') // 이미지 형태를 전송하기 위해선 response 의 헤더를 수정해야 함
     async htmlImg (@Param('file_name') filename, @Res() res) {
-        console.log(filename);
+        // console.log(filename);
 
         const image = await this.timelineService.htmlImg( filename );
-        // console.log('이미지 미리보기');
         return res.status(200).end(image);
     }
 

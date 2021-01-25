@@ -8,6 +8,7 @@ import Register from './views/Register/Register';
 
 
 import NewPost from './views/NewPost/NewPost';
+import Account from './views/Account/Account';
 
 function App() {
 
@@ -28,7 +29,7 @@ function App() {
     <BrowserRouter>
       <Switch>
         <Route path="/" exact component={Home} />
-        <Route path="/test" component={NewPost} />
+        <Route path="/account" component={Account} />
         <Route path="/login" component={Login} />
         <Route path="/register" component={Register} />
         <Route path="/timeline/:email" component={Timeline} />
