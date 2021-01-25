@@ -11,6 +11,7 @@ import DevelopInfo from "../../components/DevelopInfo/DevelopInfo";
 import { CHANGE_DATA, CHANGE_DATA_STRUCT, homeInit, homeReduce } from "./Reducer/HomeReducer";
 
 import IMG from "../../sources/instagram_logo.png";
+import { Link } from "react-router-dom";
 
 // 메인 페이지 (홈)
 const Home = ({ history }) => {
@@ -127,7 +128,10 @@ const Home = ({ history }) => {
                         <Box id="timeline-header-logo" display="flex" alignItems="center">
                             <img title="instagram-logo" src={Logo} style={{ height: "8rem", width: "auto" }} />
                         </Box>
-                        <Box id="timeline-header-user">{ email }&nbsp;&nbsp;<Button size="small" variant="outlined" color="secondary" onClick={onClickLogOut}>로그아웃</Button></Box>
+                        <Box id="timeline-header-user">
+                            <Link to={`/timeline/${email}`} style={{ color: "black", textDecoration: "none", marginRight: "1rem" }}>{ email }</Link>
+                            <Button size="small" variant="outlined" color="secondary" onClick={onClickLogOut}>로그아웃</Button>
+                        </Box>
                     </Box>
                 </Box>
                 <Box id="timeline-profile" marginTop="6rem">
