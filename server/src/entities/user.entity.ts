@@ -9,14 +9,18 @@ export class User extends BaseEntity {
     @PrimaryGeneratedColumn("uuid")
     id: string;
 
-    @Column({ length: 20, unique: true })
+    @Column({ length: 20, unique: true, nullable: false })
     email: string;
-    @Column({ length: 10 })
+    @Column({ length: 10, /*unique: true, nullable: false*/ })
     username: string;
     @Column({ length: 15 })
     password: string;
     @Column()
     salt: string;
+
+    // 프로필 이미지
+    @Column()
+    profile_image: string;
 
     // 가입일자
     @Column({ type: "timestamp", nullable: false, default: () => "CURRENT_TIMESTAMP" })

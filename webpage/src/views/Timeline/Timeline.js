@@ -6,6 +6,7 @@ import Logo from "../../sources/instagram_title.png";
 import { IoPersonSharp, IoLogoInstagram } from "react-icons/io5";
 import { CgPen, CgTag } from "react-icons/cg";
 import { MdAddAPhoto } from "react-icons/md";
+import { BsGearFill } from "react-icons/bs";
 
 import GridContainer from "../../components/GridContainer/GridContainer";
 import GridItem from "../../components/GridItem/GridItem";
@@ -85,6 +86,11 @@ const Timeline = ({ history, location, match }) => {
             })
     }
 
+    // 프로필 변경
+    const onClickEditAccount = () => {
+        history.push('/account');
+    }
+
     return (
         isLoading
         ? <Loading /> 
@@ -116,10 +122,16 @@ const Timeline = ({ history, location, match }) => {
                         display="flex" alignItem="center">
                         <Box marginRight="1.5rem" fontSize="1.8rem" fontWeight="fontWeightLight" >{ user.email }</Box>
                         {
-                            login && login !== email &&
-                            <Button size="small" onClick={onClickFollow} style={{ border: "1px blue solid" }}>
-                            { user.onFollow ? "언팔로우" : "팔로우" }
-                            </Button>
+                            login && ( 
+                                login !== email
+                                ? <Button size="small" onClick={onClickFollow} style={{ border: "1px blue solid", color: "blue", fontWeight: "600", padding: "0 1rem" }}>
+                                    { user.onFollow ? "언팔로우" : "팔로우" }
+                                    </Button>
+                                : <Button size="small" onClick={onClickEditAccount} style={{ border: "1px #888888 solid", fontWeight: "600", padding: "0 1rem" }}>
+                                    프로필 편집&nbsp;&nbsp;
+                                    <BsGearFill size="1rem" />
+                                    </Button>
+                            )
                         }
                     </Box>
                     <Box id="timeline-profile-count" marginBottom="1rem"

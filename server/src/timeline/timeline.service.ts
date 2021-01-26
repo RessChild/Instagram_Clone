@@ -94,8 +94,8 @@ export class TimelineService {
     // 이미지 미리보기
     async htmlImg (filename: string) {
         const file = await fs.promises.readFile( path.join(__dirname, `/../../uploads/${filename}` ) );
-        const filename_split = filename.split('.');
-        const type = filename_split[filename_split.length - 1];
+        // const filename_split = filename.split('.');
+        // const type = filename_split[filename_split.length - 1];
 
         return file;
         // return `data:image/*;base64,${Buffer.from(file).toString('base64')}`;

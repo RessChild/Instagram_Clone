@@ -14,6 +14,7 @@ import { HomeService } from './home/home.service';
 import { HomeModule } from './home/home.module';
 import { Follow } from './entities/follow.entity';
 import { FollowModule } from './follow/follow.module';
+import { AccountModule } from './account/account.module';
 
 @Module({
   imports: [
@@ -38,6 +39,7 @@ import { FollowModule } from './follow/follow.module';
     IdentifyModule,
     HomeModule,
     FollowModule,
+    AccountModule,
   ],
   controllers: [],
   providers: [],

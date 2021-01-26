@@ -26,3 +26,9 @@
   ( ex. follower.follower )
 - 1rem = 16px
 - window.innerWidth 사용
+- module 에서 MulterModule 을 통해 내부에서 사용할 multer 옵션을 공통으로 설정 가능
+- Multer 에서 단일 파일을 받고자 하는 경우,
+  FileInterceptor / UploadedFile 를 맞춰서 사용 해야함 (단일/복수 주의)
+- typeorm 의 update 방식 
+  1. save 를 통한 덮어쓰기 
+  2. update 함수 활용 : https://libsora.so/posts/typeorm-entity-proxy-for-save/

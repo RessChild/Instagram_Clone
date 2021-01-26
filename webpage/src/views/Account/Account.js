@@ -16,6 +16,7 @@ const Account = () => {
         { title: "프로필 편집", component: <EditProfile />},
         { title: "비밀번호 변경", component: <ChangePassword /> },
     ]
+    const user = localStorage.getItem('access_token');
     
     // 메뉴 선택 관련
     const [ hover, setHover ] = useState(-1);
@@ -40,7 +41,7 @@ const Account = () => {
                 <Box id="timeline-header-logo">
                     <img title="instagram-logo" src={Logo} style={{ height: "8rem", width: "auto" }} />
                 </Box>
-                <Box id="timeline-header-user">애옹애옹</Box>
+                <Box id="timeline-header-user">{ user }</Box>
             </Box>
         </Box>
         <Box id="timeline-profile" marginTop="6rem">
