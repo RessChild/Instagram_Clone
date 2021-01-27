@@ -10,7 +10,7 @@ import ChangePassword from "./ChangePassword/ChangePassword";
 const borderColor = "#aaaaaa";
 const maxWidth = "50rem";
 
-const Account = () => {
+const Account = ({ history }) => {
     // 메뉴 리스트 (상수)
     const menuList = [
         { title: "프로필 편집", component: <EditProfile />},
@@ -32,13 +32,16 @@ const Account = () => {
     };
     const onMouseLeaveMenu = () => setHover(-1);
 
+    // 로고 클릭
+    const onClickLogo = () =>  history.push('/');
+
     return <Box bgcolor="#f7f7f7" height="100vh" overflow="auto">
         <Box id="timeline-header" bgcolor="#ffffff"
             position="fixed" top="0" height="4rem" width="100vw" 
             borderBottom={1} borderColor="#aaaaaa">
             <Box display="flex" width="100vw" maxWidth={maxWidth} margin="auto" height="4rem"
                 alignItems="center" justifyContent="space-between">
-                <Box id="timeline-header-logo">
+                <Box id="timeline-header-logo" onClick={onClickLogo} style={{ cursor: "pointer" }}>
                     <img title="instagram-logo" src={Logo} style={{ height: "8rem", width: "auto" }} />
                 </Box>
                 <Box id="timeline-header-user">{ user }</Box>

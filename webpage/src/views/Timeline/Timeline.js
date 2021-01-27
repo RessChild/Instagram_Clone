@@ -91,6 +91,9 @@ const Timeline = ({ history, location, match }) => {
         history.push('/account');
     }
 
+    // 로고 클릭
+    const onClickLogo = () =>  history.push('/');
+
     return (
         isLoading
         ? <Loading /> 
@@ -101,7 +104,7 @@ const Timeline = ({ history, location, match }) => {
             borderBottom={1} borderColor={borderColor}>
             <Box display="flex" width="100vw" maxWidth={maxWidth} margin="auto" height="4rem"
                 alignItems="center" justifyContent="space-between">
-                <Box id="timeline-header-logo">
+                <Box id="timeline-header-logo" onClick={onClickLogo} style={{ cursor: "pointer" }}>
                     <img title="instagram-logo" src={Logo} style={{ height: "8rem", width: "auto" }} />
                 </Box>
                 <Box id="timeline-header-user">{ login }</Box>

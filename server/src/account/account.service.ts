@@ -24,6 +24,17 @@ export class AccountService {
         // 파일 삭제 함수가 들어가야 함 ==> fs.unlink 라는 함수 활용
         return this.userRepository.update({ email: email }, { profile_image: filename });
     }
+
+    // 프로필 수정
+    async setProfile (origin: string, username: string, email: string) {
+        const user = await this.userRepository.findOne({ email: origin });
+        const result = await this.userRepository.save({
+                ...user,
+                email: email,
+                username: username,
+            });
+        return result;
+    }
     
     // 프로필 사진 호출
     async htmlImg (img: string) {

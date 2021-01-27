@@ -8,9 +8,11 @@ import { CHANGE_DATA } from '../Timeline/reducer/TimelineReducer';
 
 const Register = ({ history }) => {
 
+    const source = axios.CancelToken.source();
+
     const [ state, dispatch ] = useReducer(RegisterReduce, RegisterInit);
     const { isLoading, identify, error } = state; // 각종 정보들
-    const { email, password } = identify; // 입력정보
+    const { email, username, password, password_again } = identify; // 입력정보
 
     // 입력함수
     const onChangeInput = ({ currentTarget: { id, value }}) => {
@@ -19,7 +21,7 @@ const Register = ({ history }) => {
             data: {
                 [target]: {
                     ...state[target],
-                    [name]: value
+                    [name]: value.trim()
                 }
             }
         });
@@ -28,8 +30,12 @@ const Register = ({ history }) => {
     // 에러 타입 확인
     const errorType = () => {
         switch (error) {
+            case 200:
+                return "부적절한 형식의 입력입니다. 다시 확인해주세요";
+            case 201:
+                return "비밀번호가 일치하지 않습니다.";
             case 401:
-                return "잘못된 비밀번호입니다. 다시 확인하세요.";        
+                return "이미 존재하는 계정 정보입니다.";
             case 500:
                 return "Instagram에 연결할 수 없습니다. 인터넷에 연결되어 있는지 확인한 후 다시 시도해보세요.";
             default:
@@ -38,9 +44,37 @@ const Register = ({ history }) => {
     }
 
     const onClickSubmit = () => {
+        if (!email || !username || !password) return dispatch({ type: CHANGE_DATA, data: { error: 200 }});
+        if( password !== password_again ) return dispatch({ type: CHANGE_DATA, data: { error: 201 }});
         dispatch({ type: CHANGE_DATA, data: { isLoading: true }});
-        alert("로그인 구현 필요");
-        // axios.post('/api/')
+        // alert("로그인 구현 필요");
+        axios.post('/api/identify/register', { email, username, password }, { cancelToken: source.token })
+            .then(({ data }) => {
+                // 회원가입 실패
+                if( !data ) {
+                    return dispatch({ type: CHANGE_DATA, data: {
+                        isLoading: false,
+                        error: 401,
+                    }})
+                }
+                alert("회원가입에 성공하였습니다.")
+                history.push('/');
+            })
+            .catch( e => {
+                if(axios.isCancel(e)) return;
+                if( e.config && e.config.url ) { // 네트워크 오류 검사
+                    dispatch({ type: CHANGE_DATA, data: {
+                        isLoading: false,
+                        error: 500,
+                    }})
+                }
+                else {
+                    dispatch({ type: CHANGE_DATA, data: {
+                        isLoading: false,
+                        error: e.response && e.response.status,
+                    }})
+                }
+            })
     }
 
     return (
@@ -56,7 +90,11 @@ const Register = ({ history }) => {
                     <Box width="100%">
                         <input placeholder="전화번호, 사용자 이름 또는 이메일" value={email} id="identify-email" onChange={onChangeInput}
                             style={{ width: "98%", height: "2.1rem", background: "#eeeeee", borderColor: "#aaaaaa", borderRadius: "3px", marginBottom: "0.5rem" }}/>
+                        <input placeholder="사용자 이름" value={username} id="identify-username" onChange={onChangeInput}
+                            style={{ width: "98%", height: "2.1rem", background: "#eeeeee", borderColor: "#aaaaaa", borderRadius: "3px", marginBottom: "0.5rem" }}/>
                         <input placeholder="비밀번호" type="password" value={password} id="identify-password" onChange={onChangeInput}
+                            style={{ width: "98%", height: "2.1rem", background: "#eeeeee", borderColor: "#aaaaaa", borderRadius: "3px", marginBottom: "0.5rem" }}/>
+                        <input placeholder="비밀번호 확인" type="password" value={password_again} id="identify-password_again" onChange={onChangeInput}
                             style={{ width: "98%", height: "2.1rem", background: "#eeeeee", borderColor: "#aaaaaa", borderRadius: "3px", marginBottom: "1rem" }}/>
                         <Button onClick={onClickSubmit} fullWidth variant="contained" color="primary" style={{ height: "2.2rem" }}>
                             { !isLoading ? "가입" : <CircularProgress size="1.3rem" color="#ffffff" /> }

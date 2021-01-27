@@ -21,14 +21,20 @@ export class IdentifyService {
         return true; // 차후에 jwt 반환하도록 수정
     }
 
-    async registerRequest() {
+    async registerRequest({ email, username, password }) {
+        // console.log(email, username, password);
+        if( !email || !username || !password ) return null;
+        const find = await this.userRepository.findOne({ email });
+        // console.log(find);
+        if( find ) return null; // 이미 존재하는 정보 (불가능)
+
         const result = await this.userRepository.create({
-            email: '',
-            username: '',
-            password: '',
-            salt: '',
+            email,
+            username,
+            password,
+            salt: `${email}-salt`,
         }).save();
-        console.log(result);
+        // console.log(result);
 
         return result;
     }

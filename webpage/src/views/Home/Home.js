@@ -29,6 +29,7 @@ const Home = ({ history }) => {
         axios.post('/api/home/', { jwt: localStorage.getItem('access_token') }, { cancelToken: source.token })
             .then( ({ data }) => {
                 console.log(data);
+                if( !data ) localStorage.removeItem('access_token');
                 dispatch({ type: CHANGE_DATA, data: { 
                     user: data,
                     isLoading: false 
@@ -111,6 +112,9 @@ const Home = ({ history }) => {
         }
     }, []);
 
+    // 로고 클릭
+    const onClickLogo = () => history.push('/');
+
     return (
         isLoading
         ? <Loading />
@@ -125,7 +129,7 @@ const Home = ({ history }) => {
                     borderBottom={1} borderColor="#999999">
                     <Box display="flex" width="100vw" maxWidth="50rem" margin="auto" height="4rem"
                         alignItems="center" justifyContent="space-between">
-                        <Box id="timeline-header-logo" display="flex" alignItems="center">
+                        <Box id="timeline-header-logo" display="flex" alignItems="center" onClick={onClickLogo} style={{ cursor: "pointer" }}>
                             <img title="instagram-logo" src={Logo} style={{ height: "8rem", width: "auto" }} />
                         </Box>
                         <Box id="timeline-header-user">
@@ -139,7 +143,7 @@ const Home = ({ history }) => {
                         <Box flex={2}>
                             {
                                 posts.length > 0 
-                                ? posts.map( post => <TimeCard post={post} /> )
+                                ? posts.map( (post, idx) => <TimeCard key={`post-${idx}`} post={post} /> )
                                 : <Box width="100%" bgcolor="white" borderColor="#aaaaaa" border={1} height="10rem">새로 작성된 게시글 없음</Box>
                             }
                         </Box>

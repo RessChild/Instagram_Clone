@@ -13,8 +13,7 @@ export class IdentifyController {
     }
 
     @Post('/register')
-    async registerRequest() {
-        return await this.identifyService.registerRequest();
+    async registerRequest(@Body() body) {
+        return !!await this.identifyService.registerRequest(body);
     }
-
 }

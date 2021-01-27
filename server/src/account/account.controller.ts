@@ -37,6 +37,13 @@ export class AccountController {
         return { ...result, filename: file.filename }; // 결과 반환
     }
 
+    @Post('/set-profile')
+    async setProfile (@Body('jwt') origin: string, @Body('name') username: string, @Body('email') email: string) {
+        const result = await this.accountService.setProfile(origin, username, email);
+        console.log(result);
+        return result;
+    }
+
     // 프로필 이미지
     @Get('/html-img/:img')
     async htmlImg (@Param('img') img: string, @Res() res) {

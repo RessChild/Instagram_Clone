@@ -9,9 +9,9 @@ export class User extends BaseEntity {
     @PrimaryGeneratedColumn("uuid")
     id: string;
 
-    @Column({ length: 20, unique: true, nullable: false })
+    @Column({ length: 30, unique: true, nullable: false })
     email: string;
-    @Column({ length: 10, /*unique: true, nullable: false*/ })
+    @Column({ length: 20, unique: true, nullable: false })
     username: string;
     @Column({ length: 15 })
     password: string;
@@ -19,7 +19,7 @@ export class User extends BaseEntity {
     salt: string;
 
     // 프로필 이미지
-    @Column()
+    @Column({ default: '' })
     profile_image: string;
 
     // 가입일자

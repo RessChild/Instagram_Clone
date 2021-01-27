@@ -2,7 +2,9 @@ export const RegisterInit = {
     isLoading: '',
     identify: {
         email: '',
+        username: '',
         password: '',
+        password_again: '',
     },
     error: '',
 }

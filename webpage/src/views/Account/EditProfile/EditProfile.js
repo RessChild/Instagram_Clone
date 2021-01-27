@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { Box, TextField } from "@material-ui/core";
+import { Box, Button, TextField } from "@material-ui/core";
 
 import Logo from "../../../sources/instagram_logo.png";
 
@@ -68,7 +68,18 @@ const EditProfile = () => {
         }
     }, [])
 
-    return <Box width="100%" height="100%">
+    const onClickEditSubmit = () => {
+        axios.post('/api/account/set-profile', { jwt: localStorage.getItem('access_token'), name, email }, { cancelToken: source.token })
+            .then(({ data }) => {
+                console.log(data);
+            })
+            .catch( e => {
+                if(axios.isCancel(e)) return;
+                alert(e);
+            })
+    }
+
+    return <Box width="100%" height="100%" position="relative">
         <Box display="flex" marginBottom="1rem">
             <Box id="name-left" flex={1} paddingRight="2rem" display="flex" alignItems="center" justifyContent="flex-end">
                 <img alt="프로필 사진" src={ image ? `/api/account/html-img/${image}` : Logo }
@@ -109,6 +120,15 @@ const EditProfile = () => {
                 <Box marginTop="0.5rem" color="#aaaaaa" fontSize="0.7rem" fontWeight="600">
                     대부분의 경우 14일 이내에 사용자 이름을 다시 {email}(으)로 변경할 수 있습니다. 더 알아보기
                 </Box>
+            </Box>
+        </Box>
+
+        <Box position="absolute" width="100%" bottom="0" display="flex" marginBottom="1rem">
+            <Box id="email-left" flex={1} paddingRight="2rem" paddingTop="0.5rem"
+                fontWeight="700" display="flex" justifyContent="flex-end">
+            </Box>
+            <Box id="email-right" flex={3} paddingRight="3rem">
+                <Button variant="contained" color="primary" onClick={onClickEditSubmit}>제출</Button>
             </Box>
         </Box>
     </Box>
