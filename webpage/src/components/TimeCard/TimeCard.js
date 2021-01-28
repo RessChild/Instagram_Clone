@@ -1,5 +1,5 @@
 import { Box, IconButton } from "@material-ui/core";
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import { Link } from "react-router-dom";
 
 import { MdKeyboardArrowLeft, MdKeyboardArrowRight } from "react-icons/md";
@@ -7,8 +7,6 @@ import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
 import { IoChatbubbleOutline, IoPaperPlaneOutline } from "react-icons/io5";
 import { BsBookmarkFill, BsBookmark, BsThreeDots} from "react-icons/bs";
 
-import GridContainer from "../GridContainer/GridContainer";
-import GridItem from "../GridItem/GridItem";
 import IMG from "../../sources/instagram_logo.png";
 
 const borderColor = "#c7c7c7";
@@ -32,12 +30,17 @@ const TimeCard = ({ post }) => {
         setActived({ ...actived, [id]: !actived[id] });
     }
 
-    const { picture, writer } = post;
+    const { picture, writer, comments, content } = post;
+    const { email, username, id, profile_image } = writer;
 
     // 프로필 메뉴 클릭
     const onClickProfileMenu = () => {
         alert("버튼 클릭");
     }
+
+    useEffect( () => {
+        console.log(post);
+    }, []);
 
     return (
         <Box width="100%" bgcolor="#ffffff" marginBottom="3rem"
@@ -46,14 +49,14 @@ const TimeCard = ({ post }) => {
                 display="flex" alignItems="center" justifyContent="space-between">
                 <Box display="flex" alignItems="center">
                     <Box display="flex" justifyContent="center" marginLeft="1rem" marginRight="1rem">
-                        <img src={IMG} alt="user-profile"
+                        <img src={profile_image ? `/api/account/html-img/${profile_image}` : IMG} alt="user-profile"
                             style={{ width: "2rem", height: "2rem", borderRadius: "1rem", border: "2px red solid" }}/>
                     </Box>
-                    <Link to={`/timeline/${writer.email}`}
+                    <Link to={`/timeline/${email}`}
                         // onMouseOver="this.style.textDecorationLine='underline'"
                         // onMouseOut="this.style.textDecorationLine='none'"
                         style={{ color:"#000000", fontWeight: "600", textDecoration: "none" }}>
-                        { writer.email }
+                        { email }
                     </Link>
                 </Box>
                 <IconButton onClick={onClickProfileMenu}>
@@ -80,8 +83,8 @@ const TimeCard = ({ post }) => {
                         </IconButton>
                     }
             </Box>
-            <Box padding="0.8rem">
-                <Box display="flex" justifyContent="space-between">
+            <Box padding="0.8rem" borderBottom={1} borderColor={borderColor}>
+                <Box display="flex" justifyContent="space-between" marginBottom="0.3rem">
                     <Box display="flex" width="25%" alignItems="center" justifyContent="space-between">
                         { actived.like 
                             ? <AiFillHeart id="like" size="2rem" onClick={onClickIcon} style={{ cursor: "pointer" }} />
@@ -97,10 +100,21 @@ const TimeCard = ({ post }) => {
                         }
                     </Box>
                 </Box>
+                <Box fontSize="0.9rem" whiteSpace="wrap" style={{ wordBreak: "break-all" }}>
+                    <Link style={{ display: "inline", fontWeight: "600", marginRight: "0.5rem", textDecoration: "none" }}>{ email }</Link>
+                    { content }
+                </Box>
                 <Box>
-                    덧글들
+                { comments && comments.length > 0 && <Box fontSize="0.8rem" color="#aaaaaa" marginTop="0.2rem" marginBottom="0.2rem">댓글 {comments.length}개 모두보기</Box> }
+                { comments.map( ({ content, writer }, idx) =>
+                    <Box key={`comment-${idx}`} fontSize="0.9rem">
+                        <Link style={{ display: "inline", fontWeight: "600", marginRight: "0.5rem", textDecoration: "none" }}>{ writer.email }</Link>
+                        { content }
+                    </Box>
+                )}
                 </Box>
             </Box>
+            <Box height="3rem">덧글 입력창</Box>
         </Box>
     )
 }

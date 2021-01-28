@@ -13,16 +13,16 @@ export class HomeController {
     @Post()
     async getFollowPosts (@Body('jwt') user: string) { // 사용자 정보
         const result = await this.homeService.getFollowPosts(user);
-        console.log("home:", user, result);
+        // console.log("home:", user, result);
         // return result;
         return {
             email: user,
             posts: result
                 .map(({ writer, ...others }) => {
-                    const { id, email, username } = writer;
+                    const { id, email, username, profile_image } = writer;
                     return {
                         ...others,
-                        writer: { id, email, username }
+                        writer: { id, email, username, profile_image }
                     }
                 })
                 .sort((a: any,b: any) => b.writedAt - a.writedAt),

@@ -100,3 +100,6 @@
     - 프로필 변경 페이지 구축
     - 프로필 변경 기능 진행 중 (DB 개편 필요)
     - typeorm 의 트랜젝션 관련 검색 ( https://cherrypick.co.kr/typeorm-basic-transaction/ )
+14. 2021/01/28
+    - 메인 홈페이지 덧글보기 기능 + 덧글별 프로필사진 연동
+    - 회원가입 링크 연동

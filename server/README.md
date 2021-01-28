@@ -32,3 +32,4 @@
 - typeorm 의 update 방식 
   1. save 를 통한 덮어쓰기 
   2. update 함수 활용 : https://libsora.so/posts/typeorm-entity-proxy-for-save/
+- repository.find 의 배열값 기반 탐색방법 ( 자체 함수 In 을 지원 )

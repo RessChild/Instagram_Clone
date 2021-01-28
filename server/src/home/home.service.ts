@@ -1,9 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { In, Repository } from 'typeorm';
+
 import { Follow } from 'src/entities/follow.entity';
 import { Post } from 'src/entities/post.entity';
 import { User } from 'src/entities/user.entity';
-import { Repository } from 'typeorm';
+import { Comment } from 'src/entities/comment.entity';
 
 @Injectable()
 export class HomeService {
@@ -31,10 +33,34 @@ export class HomeService {
             .getMany();
 
         if( !following.length ) return [];
+
+        // console.log()
+        const result = await this.postRepository.find({
+            where: {
+                // 배열 안 조건 모두 확인
+                writer: In(following.map(({ following }) => following.id )),
+            },
+            relations: ['writer', 'comments', 'comments.writer'],
+        });
+        // return result.map(({ writer: { email, username }, ...others }) => ({ ...others, writer: { email, username }}));
+        /*
         const result = await this.postRepository.createQueryBuilder('post')
             .where('post.writer IN (:writer)', { writer: following.map(({ following }) => following.id ) })
             .leftJoinAndSelect('post.writer','user')
+            .leftJoinAndSelect('post.comments', 'comment')
+            // .leftJoinAndMapMany(
+            //     "post.comments",
+            //     (subQuery) => {
+            //         return subQuery
+            //             .select()
+            //             .from(Comment, "comment")
+            //             .innerJoinAndSelect('comment.writer', 'user')
+            //     }, 
+            //     'comment',
+            //     'comment')
+            // .leftJoinAndSelect('post.comments.writer', 'user')
             .getMany();
+*/
         return result;
     }
 }

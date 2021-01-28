@@ -3,6 +3,7 @@ export const homeInit = {
     identify: {
         email: '',
         password: '',
+        isLoading: false, // 로그인 로딩
     },
     error: '',
     user: {

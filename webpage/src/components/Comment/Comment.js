@@ -5,6 +5,7 @@ import { AiOutlineHeart } from "react-icons/ai";
 import IMG from "../../sources/instagram_logo.png";
 
 const Comment = ({ comment }) => {
+    console.log(comment);
     const { writer, content, writedAt } = comment || {};
     const { email } = writer;
     // console.log(comment);

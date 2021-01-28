@@ -50,7 +50,7 @@ const Home = ({ history }) => {
 
     // 로그인 요청
     const onClickSubmit = () => {
-        dispatch({ type: CHANGE_DATA, data: { isLoading: true }});
+        dispatch({ type: CHANGE_DATA_STRUCT, target: "identify", data: { isLoading: true }});
         axios.post('/api/identify/login', identify, { cancelToken: source.token })
             .then( ({ data }) => {
                 console.log(data);
@@ -58,29 +58,29 @@ const Home = ({ history }) => {
                 // 로그인 실패
                 if( !data ) {
                     return dispatch({ type: CHANGE_DATA, data: {
-                        isLoading: false,
                         error: 401,
+                        identify: { ...identify, isLoading: false },
                     }})
                 }
                 // 로컬저장소에 정보 저장 ( 실제론 jwt 정보가 저장되어야 함 )
                 localStorage.setItem('access_token', identify.email);
                 // history.go(0);
+                dispatch({ type: CHANGE_DATA_STRUCT, target: "identify", data: { email: '', password: '', isLoading: false }});
                 axiosUser();
-                dispatch({ type: CHANGE_DATA, data: { isLoading: false }});
                 // return history.push(`/timeline/${email}`);
             })
             .catch( e => {
                 if( axios.isCancel(e) ) return; // 취소인 경우 무시
                 if( e.config && e.config.url ) { // 네트워크 오류 검사
                     dispatch({ type: CHANGE_DATA, data: {
-                        isLoading: false,
                         error: 500,
+                        identify: { ...identify, isLoading: false },
                     }})
                 }
                 else {
                     dispatch({ type: CHANGE_DATA, data: {
-                        isLoading: false,
                         error: e.response && e.response.status,
+                        identify: { ...identify, isLoading: false },
                     }})
                 }
             })
@@ -169,7 +169,7 @@ const Home = ({ history }) => {
             <Box width="100vw" height="100vh" bgcolor="#f7f7f7"
                 display="flex" alignItems="center" justifyContent="center">
                     <Box width="100vw" maxWidth="50rem" display="flex" justifyContent="space-between">
-                        <Box width="50%">
+                        <Box width="50%" display="flex" alignItems="center">
                             <DevelopInfo />
                         </Box>
                         <Box width="35%" padding="2rem"
@@ -188,6 +188,7 @@ const Home = ({ history }) => {
                                 </Button>
                             </Box>
                             <Box width="100%" marginTop="1rem" textAlign="center" whiteSpace="wrap" color="red">{ error && errorType() }</Box>
+                            <Box marginTop="3rem" fontSize="0.8rem" textAlign="center">계정이 없으신가요? <Link to="/register" style={{ textDecoration: "none", color: "blue", fontWeight: "600" }}>회원가입</Link></Box>
                         </Box>
                     </Box>
             </Box>
