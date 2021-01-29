@@ -117,7 +117,11 @@ const Timeline = ({ history, location, match }) => {
                     <Box border={3} borderColor="#ffa4a4" bgcolor="white"
                         width="10rem" height="10rem" borderRadius="5rem" overflow="hidden" 
                         display="flex" justifyContent="center" alignItems="center">
-                        <IoPersonSharp size="6rem" color="black"/>
+                        {
+                            user.profile_image
+                            ? <img src={`/api/account/html-img/${user.profile_image}`} alt="유저 프로필 사진" style={{ minWidth: "3rem", maxWidth: "6rem", minHeight: "3rem", maxHeight: "6rem" }} />
+                            : <IoPersonSharp size="6rem" color="black"/>
+                        }
                     </Box>
                 </Box>
                 <Box id="timeline-profile-info" flex={2} >

@@ -26,7 +26,7 @@ export class TimelineService {
     userTimeline (email: string) {
         return User.find({
                 where: [{ email: email }],
-                select: ["email", "username", "registeredAt"],
+                select: ["email", "username", "registeredAt", "profile_image"],
                 relations: ["posts", "follower", "follower.follower"],
             });
     }
@@ -79,13 +79,14 @@ export class TimelineService {
     }
 
     // 게시글 작성
-    async writePost (email: string, filenames: string[], content) { 
+    async writePost (email: string, filenames: string[], content: string) { 
         const user = await User.findOne(null, {
             where: [{ email: email }]
         });
         const result = await Post.create({
             writer: user,
             picture: filenames,
+            content: content,
             // content: ,
         }).save();
         return result;

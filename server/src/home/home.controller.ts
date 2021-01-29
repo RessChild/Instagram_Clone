@@ -1,4 +1,4 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Param, Post } from '@nestjs/common';
 import { HomeService } from './home.service';
 
 // 메인 홈 정보 ( 팔로워 게시글 )
@@ -28,4 +28,9 @@ export class HomeController {
                 .sort((a: any,b: any) => b.writedAt - a.writedAt),
         }
     }
+
+    // @Post('/new-comment/:pid')
+    // async addComment (@Param('pid') pid: string, @Body('jwt') user: string) {
+    //     return this.homeService.addComment();
+    // }
 }

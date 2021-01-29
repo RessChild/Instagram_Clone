@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { Box, Button, IconButton } from "@material-ui/core";
+import { Box, Button, IconButton, Input } from "@material-ui/core";
 import { useTransition, animated } from "react-spring";
 
 import { MdKeyboardArrowLeft, MdKeyboardArrowRight } from "react-icons/md";
@@ -19,10 +19,14 @@ const NewPost = ({ email, onClose }) => {
     const [ page, setPage ] = useState(0); // 현재 페이지 번호
     const [ localImgs, setLocalImgs ] = useState([]); // 로컬 파일 정보
     const [ images, setImages ] = useState([]); // 이미지 리스트
+    const [ content, setContent ] = useState(''); // 작성 내용
 
     // 좌,우 버튼 클릭 함수
     const onClickLeft = () => setPage(page-1);
     const onClickRight = () => setPage(page+1);
+
+    // 게시글 작성
+    const onChangeContent = ({ currentTarget: { value }}) => setContent(value);
 
     // 애니메이션 옵션
     // 사용할 인덱스, ??, 애니메이션 스타일
@@ -57,7 +61,8 @@ const NewPost = ({ email, onClose }) => {
         // console.log(localImgs);
         const formData = new FormData();
         formData.append('jwt', localStorage.getItem('access_token'));
-        formData.append('email', email)
+        formData.append('email', email);
+        formData.append('content', content);
         for(const img of localImgs) {
             // console.log(idx);
             formData.append("localImgs", img);
@@ -96,7 +101,6 @@ const NewPost = ({ email, onClose }) => {
                         </animated.div>;
                     })
                 }
-                    {/* <img src={IMG} /> */}
                 { // 좌측에 추가 이미지가 있을 때만 활성화
                     images.length && 0 < page &&
                     <IconButton id="img-btn-left" onClick={onClickLeft}
@@ -112,10 +116,14 @@ const NewPost = ({ email, onClose }) => {
                     </IconButton>
                 }
             </Box>
-            <Box id="text-space" flex={3} borderLeft={1} borderColor="#aaaaaa" display="flex" flexDirection="column">
-                <Box>작성자정보</Box>
-                <Box>내용내여ㅛㅇ</Box>
-                <Button id="btn-submit" onClick={onClickSubmit}>게시글 등록</Button>
+            <Box id="text-space" flex={3} borderLeft={1} borderColor="#aaaaaa" display="flex" position="relative" flexDirection="column">
+                <Box height="4rem" borderBottom={1} borderColor="#aaaaaa" textAlign="center" fontWeight="600" lineHeight="4rem">새 게시글 작성</Box>
+                <Box padding="1rem">
+                    <Input multiline rows="8" fullWidth style={{ border: "1px black solid", padding: "0.7rem" }} value={content} onChange={onChangeContent}/>
+                </Box>
+                <Box position="absolute" bottom="0" width="100%">
+                    <Button id="btn-submit" fullWidth variant="contained" color="primary" onClick={onClickSubmit} >게시글 등록</Button>
+                </Box>
             </Box>
         </Box>
     )

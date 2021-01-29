@@ -16,4 +16,4 @@
   ( 다만, 자신의 부모 기준으로 절대위치를 잡을 경우, 부모의 position 은 relative 가 될 것 )
 - animated 에서 box 가 층층이 생기는것을 막기위해선 position="absolute" 설정할 것
 - img 의 objectFit 속성은 사진 비율을 유지하도록 하는 옵션
-
+- Timecard 를 갱신하려면 pid 를 주고, 각각의 객체가 정보를 받아오는 형태로 써야할듯..?

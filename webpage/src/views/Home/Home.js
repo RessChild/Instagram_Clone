@@ -57,6 +57,7 @@ const Home = ({ history }) => {
 
                 // 로그인 실패
                 if( !data ) {
+                    localStorage.removeItem('access_token'); // 실패 시, 제거
                     return dispatch({ type: CHANGE_DATA, data: {
                         error: 401,
                         identify: { ...identify, isLoading: false },

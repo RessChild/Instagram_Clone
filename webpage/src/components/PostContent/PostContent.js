@@ -5,10 +5,9 @@ import { AiOutlineHeart } from "react-icons/ai";
 import { IoPersonSharp } from "react-icons/io5";
 import IMG from "../../sources/instagram_logo.png";
 
-const Comment = ({ comment }) => {
-    const { writer, content, writedAt } = comment || {};
+const PostContent = ({ writer, writedAt, content }) => {
     const { email, profile_image } = writer;
-    // console.log(comment);
+
     return <Box display="flex" marginTop="1.2rem" marginBottom="1.2rem">
         <Box width="4rem" display="flex" justifyContent="center" id="comment-profile">
         {
@@ -30,12 +29,9 @@ const Comment = ({ comment }) => {
                 <Box>
                     { writedAt.slice(0,10) }
                 </Box>
-                <Box>좋아요</Box>
-                <Box>답글</Box>
             </Box>
         </Box>
-        <IconButton style={{ margin: "0.1rem" }}><AiOutlineHeart size="0.8rem"/></IconButton>
         </Box>
 }
 
-export default Comment;
+export default PostContent;

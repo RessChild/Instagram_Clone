@@ -45,6 +45,7 @@ export class TimelineController {
             writer: { // 필요한 정보만 필터링
                 id: result.writer.id,
                 email: result.writer.email,
+                profile_image: result.writer.profile_image,
             },
             comments: comments.map( ({ writer, ...others }) => {
                 // 덧글작성자 정보 필터링
@@ -61,8 +62,8 @@ export class TimelineController {
     @Post('/add-comment/:pid')
     async addComment(@Param('pid') pid: string, @Body() body) {
         const { jwt, content } = body; // 정보 추출
-        console.log(jwt, content);
-        return this.timelineService.addComment(pid, jwt, content);
+        // console.log(jwt, content);
+        return !!this.timelineService.addComment(pid, jwt, content);
         // return 'i will add new commnet';
     }
 
@@ -82,9 +83,9 @@ export class TimelineController {
     async writePost (@UploadedFiles() files, @Body() body) {
         // console.log("포스트 작성", files, body);
 
-        const { email, jwt, text } = body;
+        const { email, jwt, content } = body;
         if( email !== jwt ) return null; // 작성자 정보가 다르면 실패
-        return await this.timelineService.writePost(email, files.map(file => file.filename), text);
+        return await this.timelineService.writePost(email, files.map(file => file.filename), content);
     }
 
     // 이미지 미리보기

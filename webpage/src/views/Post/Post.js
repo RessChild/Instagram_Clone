@@ -6,12 +6,13 @@ import { useTransition, animated } from "react-spring";
 import { MdKeyboardArrowLeft, MdKeyboardArrowRight } from "react-icons/md";
 import { BsThreeDots } from "react-icons/bs";
 import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
-import { IoChatbubbleOutline, IoPaperPlaneOutline } from "react-icons/io5";
+import { IoChatbubbleOutline, IoPaperPlaneOutline, IoPersonSharp } from "react-icons/io5";
 import { BsBookmark, BsBookmarkFill } from "react-icons/bs";
 
 import { CHANGE_DATA, PostInit, PostReduce } from "./reducer/PostReducer";
 import IMG from "../../sources/instagram_logo.png";
 import Comment from "../../components/Comment/Comment";
+import PostContent from "../../components/PostContent/PostContent";
 import Loading from "../../views/Loading/Loading";
 
 // react-spring 참고 링크
@@ -24,7 +25,7 @@ const Post = ({ pid }) => {
 
     const [ state, dispatch ] = useReducer(PostReduce, PostInit);
     const { isLoading, page, post } = state;
-    const { picture, content, writer, comments } = post;
+    const { picture, content, writer, writedAt, comments } = post;
     // 버튼 사용 가능 여부
     const [ disabled, setDisabled ] = useState({
         newComment: true,
@@ -148,9 +149,13 @@ const Post = ({ pid }) => {
                     overflow="auto" maxHeight="60vh" position="relative">
                     <Box borderBottom={1} height="4rem" display="flex" alignItems="center" justifyContent="center"
                         position="absolute" top="0" width="100%">
-                        <Box flex={3} display="flex" justifyContent="center">
-                            <img src={IMG} alt="user-profile"
+                        <Box width="4rem" display="flex" justifyContent="center">
+                        {
+                            writer.profile_image
+                            ? <img src={`/api/account/html-img/${writer.profile_image}`} alt="user-profile"
                                 style={{ width: "2rem", height: "2rem", borderRadius: "1rem", border: "2px red solid" }}/>
+                            : <IoPersonSharp size="2rem" color="black" style={{ borderRadius: "2rem", border: "2px red solid" }}/>
+                        }
                         </Box>
                         <Box flex={8} fontWeight="600">
                             { writer.email }
@@ -160,6 +165,7 @@ const Post = ({ pid }) => {
                         </IconButton>
                     </Box>
                     <Box marginTop="4rem" marginBottom="10rem" overflow="auto">
+                        <PostContent writer={writer} writedAt={writedAt} content={content}/>
                         { comments.map( comment => <Comment comment={comment} /> ) }
                     </Box>
                     <Box position="absolute" bottom="0" width="100%">

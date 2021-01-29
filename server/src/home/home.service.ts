@@ -63,4 +63,6 @@ export class HomeService {
 */
         return result;
     }
+
+    // async addComment (email: string, ) {}
 }
