@@ -20,9 +20,12 @@ export class AccountService {
     }
 
     // 프로필 사진 변경
-    setProfileImage (filename: string, email: string) {
+    async setProfileImage (filename: string, email: string) {
         // 파일 삭제 함수가 들어가야 함 ==> fs.unlink 라는 함수 활용
-        return this.userRepository.update({ email: email }, { profile_image: filename });
+        const profile = await this.userRepository.findOne({ email: email }, { select: ['profile_image'] });
+        const result = await this.userRepository.update({ email: email }, { profile_image: filename });
+        if( profile.profile_image ) await fs.promises.unlink(path.join(__dirname, `../../profiles/${profile.profile_image}`))
+        return result;
     }
 
     // 프로필 수정
