@@ -37,6 +37,7 @@ export class AccountController {
         return { ...result, filename: file.filename }; // 결과 반환
     }
 
+    // 프로필 정보 수정
     @Post('/set-profile')
     async setProfile (@Body('jwt') origin: string, @Body('name') username: string, @Body('email') email: string) {
         const result = await this.accountService.setProfile(origin, username, email);
@@ -49,5 +50,13 @@ export class AccountController {
     async htmlImg (@Param('img') img: string, @Res() res) {
         const image = await this.accountService.htmlImg(img);
         return res.status(200).end(image);
+    }
+
+    // 비밀번호 수정
+    @Post('/set-password')
+    async setPassword (@Body() body) {
+        const { jwt, password, nPassword } = body;
+        const result = await this.accountService.setPassword(jwt, password, nPassword);
+        return result;
     }
 }

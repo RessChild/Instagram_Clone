@@ -44,4 +44,12 @@ export class AccountService {
         const file = await fs.promises.readFile( path.join(__dirname, `/../../profiles/${img}` ) );
         return file;
     }
+
+    // 비밀번호 수정
+    async setPassword (email: string, password: string, nPassword: string) {
+        const user = await this.userRepository.findOne({ email: email }); // 사용자 검색
+        if( user.password !== password ) return 404; // 비밀번호가 다르면 수정 실패
+        const result = this.userRepository.save({ ...user, password: nPassword });
+        return !!result ? 200 : 501; // 수정해서 저장
+    }
 }

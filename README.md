@@ -1,3 +1,9 @@
+# Instagram Clone Project
+    - ![main page](./readMe/main(1))
+    - ![main list](./readMe/main(3))
+    - ![timeline](./readMe/timeline(1))
+    - ![account](./readMe/account(1))
+
 # 기본 세팅
     - front: REACT / AXIOS / REACT-ICONS / REACT-SPRING / MULTER
         1. npx create-react-app webpage
@@ -12,7 +18,7 @@
         6. npm i @types/passport-jwt --save-dev
         7. npm i dotenv --save
         8. npm i mysql --save
-        
+
 # 실행 방법
     * 실행 전에 각 폴더에서 "npm i" 실행 
     - front : npm start
@@ -108,3 +114,7 @@
       ( 화면 갱신 기능 추가 필요 )
     - 프로필 이미지 출력 ( 이후, 이미지 수정 시 기존파일 삭제기능 추가 필요 ) = 완료
     - 게시글 작성 폼 수정 완료
+16. 2021/02/01
+    - 비밀번호 설정 화면 수정 진행 / 기능 구현
+      ( 비밀번호 찾기 기능 추가 필요 )
+    - 비밀번호 입력에 대한 에러팝업창 구현 ( material-ui 의 slide 컴포넌트 사용 )
