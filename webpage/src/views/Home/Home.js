@@ -145,7 +145,7 @@ const Home = ({ history }) => {
                             {
                                 posts.length > 0 
                                 ? posts.map( (post, idx) => <TimeCard key={`post-${idx}`} post={post} /> )
-                                : <Box width="100%" bgcolor="white" borderColor="#aaaaaa" border={1} height="10rem">새로 작성된 게시글 없음</Box>
+                                : <Box width="100%" bgcolor="white" borderColor="#aaaaaa" border={1} height="10rem" textAlign="center" lineHeight="10rem">새로운 소식이 없습니다.</Box>
                             }
                         </Box>
                         {/* <Box flex={1}></Box> */}
@@ -159,7 +159,7 @@ const Home = ({ history }) => {
                                 </Box>
                                 <Box flex={1}>
                                     <Box fontWeight="600">{ email }</Box>
-                                    <Box fontSize="0.8rem" color="#777777">사용자 이름 넣을 공간</Box>
+                                    <Box fontSize="0.8rem" color="#777777">사용자 이름</Box>
                                 </Box>
                             </Box>
                         </Box>

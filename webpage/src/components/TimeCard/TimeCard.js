@@ -51,7 +51,7 @@ const TimeCard = ({ post }) => {
 
     // 하단 버튼 ( 좋아요, 북마크 )
     const onClickIcon = ({ currentTarget: { id }}) => {
-        console.log(id);
+        // console.log(id);
         setActived({ ...actived, [id]: !actived[id] });
     }
 
