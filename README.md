@@ -1,8 +1,8 @@
 # Instagram Clone Project
-    - ![main page](./readMe/main(1))
-    - ![main list](./readMe/main(3))
-    - ![timeline](./readMe/timeline(1))
-    - ![account](./readMe/account(1))
+    - ![main page](./readMe/main(1),png)
+    - ![main list](./readMe/main(3).png)
+    - ![timeline](./readMe/timeline(1).png)
+    - ![account](./readMe/account(1).png)
 
 # 기본 세팅
     - front: REACT / AXIOS / REACT-ICONS / REACT-SPRING / MULTER
